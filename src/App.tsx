@@ -3,6 +3,18 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import AdminLayout from "./layouts/AdminLayout";
+import VendorLayout from "./layouts/VendorLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import VendorDashboard from "./pages/vendor/VendorDashboard";
+import UserManagement from "./pages/admin/UserManagement";
+import BrandCategories from "./pages/admin/BrandCategories";
+import AdminSettings from "./pages/admin/AdminSettings";
+import ProductUpload from "./pages/vendor/ProductUpload";
+import ProductManagement from "./pages/vendor/ProductManagement";
+import VendorRevenue from "./pages/vendor/VendorRevenue";
+import VendorSettings from "./pages/vendor/VendorSettings";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -16,7 +28,25 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          
+          {/* Admin Routes */}
+          <Route path="/admin" element={<SidebarProvider><AdminLayout /></SidebarProvider>}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="users" element={<UserManagement />} />
+            <Route path="brands-categories" element={<BrandCategories />} />
+            <Route path="settings" element={<AdminSettings />} />
+          </Route>
+          
+          {/* Vendor Routes */}
+          <Route path="/vendor" element={<SidebarProvider><VendorLayout /></SidebarProvider>}>
+            <Route index element={<VendorDashboard />} />
+            <Route path="products/upload" element={<ProductUpload />} />
+            <Route path="products/manage" element={<ProductManagement />} />
+            <Route path="revenue" element={<VendorRevenue />} />
+            <Route path="settings" element={<VendorSettings />} />
+          </Route>
+          
+          {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
