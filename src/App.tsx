@@ -11,10 +11,14 @@ import VendorDashboard from "./pages/vendor/VendorDashboard";
 import UserManagement from "./pages/admin/UserManagement";
 import BrandCategories from "./pages/admin/BrandCategories";
 import AdminSettings from "./pages/admin/AdminSettings";
+import AdminWallet from "./pages/admin/AdminWallet";
+import AdminMessages from "./pages/admin/AdminMessages";
 import ProductUpload from "./pages/vendor/ProductUpload";
 import ProductManagement from "./pages/vendor/ProductManagement";
 import VendorRevenue from "./pages/vendor/VendorRevenue";
 import VendorSettings from "./pages/vendor/VendorSettings";
+import VendorWallet from "./pages/vendor/VendorWallet";
+import VendorMessages from "./pages/vendor/VendorMessages";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -34,6 +38,8 @@ const App = () => (
             <Route index element={<AdminDashboard />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="brands-categories" element={<BrandCategories />} />
+            <Route path="wallet" element={<AdminWallet />} />
+            <Route path="messages" element={<AdminMessages />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
           
@@ -43,6 +49,8 @@ const App = () => (
             <Route path="products/upload" element={<ProductUpload />} />
             <Route path="products/manage" element={<ProductManagement />} />
             <Route path="revenue" element={<VendorRevenue />} />
+            <Route path="wallet" element={<VendorWallet />} />
+            <Route path="messages" element={<VendorMessages />} />
             <Route path="settings" element={<VendorSettings />} />
           </Route>
           
