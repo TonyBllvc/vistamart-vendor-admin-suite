@@ -29,6 +29,10 @@ export default {
 				'vistamart-blue': 'hsl(var(--vistamart-blue))',
 				'vistamart-orange': 'hsl(var(--vistamart-orange))',
 				
+				// User/Affiliate Panel Colors
+				'affiliate-primary': 'hsl(var(--affiliate-primary))',
+				'affiliate-secondary': 'hsl(var(--affiliate-secondary))',
+				
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))',

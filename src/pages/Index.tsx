@@ -189,6 +189,44 @@ const Index = () => {
                 </Button>
               </CardContent>
             </Card>
+            
+            <Card className="p-6 bg-white text-foreground max-w-sm">
+              <CardHeader className="text-center pb-4">
+                <div className="w-12 h-12 bg-affiliate-primary rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <ShoppingBag className="h-6 w-6 text-white" />
+                </div>
+                <CardTitle>User Panel</CardTitle>
+                <CardDescription>
+                  Shop, manage orders, and track your purchases
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button asChild className="w-full bg-affiliate-primary hover:bg-affiliate-primary/90">
+                  <Link to="/user">
+                    Enter User Panel
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="p-6 bg-white text-foreground max-w-sm">
+              <CardHeader className="text-center pb-4">
+                <div className="w-12 h-12 bg-affiliate-secondary rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <TrendingUp className="h-6 w-6 text-black" />
+                </div>
+                <CardTitle>Affiliate Panel</CardTitle>
+                <CardDescription>
+                  Earn commissions by promoting products and managing referrals
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button asChild className="w-full bg-affiliate-secondary hover:bg-affiliate-secondary/90 text-black">
+                  <Link to="/affiliate">
+                    Enter Affiliate Panel
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>

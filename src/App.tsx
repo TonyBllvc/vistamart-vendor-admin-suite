@@ -19,6 +19,16 @@ import VendorRevenue from "./pages/vendor/VendorRevenue";
 import VendorSettings from "./pages/vendor/VendorSettings";
 import VendorWallet from "./pages/vendor/VendorWallet";
 import VendorMessages from "./pages/vendor/VendorMessages";
+import UserAffiliateLayout from "./layouts/UserAffiliateLayout";
+import UserDashboard from "./pages/user/UserDashboard";
+import AffiliateDashboard from "./pages/affiliate/AffiliateDashboard";
+import UserCart from "./pages/user/UserCart";
+import UserOrders from "./pages/user/UserOrders";
+import UserWishlist from "./pages/user/UserWishlist";
+import UserTransactions from "./pages/user/UserTransactions";
+import UserWallet from "./pages/user/UserWallet";
+import UserProfile from "./pages/user/UserProfile";
+import AffiliateEarnings from "./pages/affiliate/AffiliateEarnings";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -52,6 +62,29 @@ const App = () => (
             <Route path="wallet" element={<VendorWallet />} />
             <Route path="messages" element={<VendorMessages />} />
             <Route path="settings" element={<VendorSettings />} />
+          </Route>
+          
+          {/* User Routes */}
+          <Route path="/user" element={<SidebarProvider><UserAffiliateLayout /></SidebarProvider>}>
+            <Route index element={<UserDashboard />} />
+            <Route path="cart" element={<UserCart />} />
+            <Route path="orders" element={<UserOrders />} />
+            <Route path="wishlist" element={<UserWishlist />} />
+            <Route path="transactions" element={<UserTransactions />} />
+            <Route path="wallet" element={<UserWallet />} />
+            <Route path="profile" element={<UserProfile />} />
+          </Route>
+          
+          {/* Affiliate Routes */}
+          <Route path="/affiliate" element={<SidebarProvider><UserAffiliateLayout /></SidebarProvider>}>
+            <Route index element={<AffiliateDashboard />} />
+            <Route path="cart" element={<UserCart />} />
+            <Route path="orders" element={<UserOrders />} />
+            <Route path="wishlist" element={<UserWishlist />} />
+            <Route path="transactions" element={<UserTransactions />} />
+            <Route path="wallet" element={<UserWallet />} />
+            <Route path="earnings" element={<AffiliateEarnings />} />
+            <Route path="profile" element={<UserProfile />} />
           </Route>
           
           {/* Catch-all route */}

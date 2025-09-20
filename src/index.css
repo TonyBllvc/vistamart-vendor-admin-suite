@@ -12,6 +12,10 @@ All colors MUST be HSL.
     --vistamart-blue: 221 84% 47%;
     --vistamart-orange: 22 95% 52%;
     
+    /* User/Affiliate Panel Colors */
+    --affiliate-primary: 140 100% 35%;
+    --affiliate-secondary: 48 98% 54%;
+    
     /* Base Colors */
     --background: 0 0% 100%;
     --foreground: 220 13% 18%;
