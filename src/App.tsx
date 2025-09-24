@@ -13,6 +13,7 @@ import BrandCategories from "./pages/admin/BrandCategories";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminWallet from "./pages/admin/AdminWallet";
 import AdminMessages from "./pages/admin/AdminMessages";
+import AdminProductManagement from "./pages/admin/AdminProductManagement";
 import ProductUpload from "./pages/vendor/ProductUpload";
 import ProductManagement from "./pages/vendor/ProductManagement";
 import VendorRevenue from "./pages/vendor/VendorRevenue";
@@ -48,6 +49,7 @@ const App = () => (
             <Route index element={<AdminDashboard />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="brands-categories" element={<BrandCategories />} />
+            <Route path="products" element={<AdminProductManagement />} />
             <Route path="wallet" element={<AdminWallet />} />
             <Route path="messages" element={<AdminMessages />} />
             <Route path="settings" element={<AdminSettings />} />
