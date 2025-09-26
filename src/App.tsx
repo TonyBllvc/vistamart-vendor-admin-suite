@@ -14,6 +14,8 @@ import AdminSettings from "./pages/admin/AdminSettings";
 import AdminWallet from "./pages/admin/AdminWallet";
 import AdminMessages from "./pages/admin/AdminMessages";
 import AdminProductManagement from "./pages/admin/AdminProductManagement";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import AdminOrders from "./pages/admin/AdminOrders";
 import ProductUpload from "./pages/vendor/ProductUpload";
 import ProductManagement from "./pages/vendor/ProductManagement";
 import VendorRevenue from "./pages/vendor/VendorRevenue";
@@ -50,6 +52,8 @@ const App = () => (
             <Route path="users" element={<UserManagement />} />
             <Route path="brands-categories" element={<BrandCategories />} />
             <Route path="products" element={<AdminProductManagement />} />
+            <Route path="orders" element={<AdminOrders />} />
+            <Route path="analytics" element={<AdminAnalytics />} />
             <Route path="wallet" element={<AdminWallet />} />
             <Route path="messages" element={<AdminMessages />} />
             <Route path="settings" element={<AdminSettings />} />
