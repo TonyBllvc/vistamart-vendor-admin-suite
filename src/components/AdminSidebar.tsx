@@ -25,7 +25,8 @@ import {
 const menuItems = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
   { title: "User Management", url: "/admin/users", icon: Users },
-  { title: "Brands & Categories", url: "/admin/brands-categories", icon: Tag },
+  { title: "Brand Management", url: "/admin/brands", icon: Package },
+  { title: "Category Management", url: "/admin/categories", icon: Tag },
   { title: "Products", url: "/admin/products", icon: Package },
   { title: "Orders", url: "/admin/orders", icon: ShoppingBag },
   { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },

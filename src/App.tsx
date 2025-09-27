@@ -9,7 +9,8 @@ import VendorLayout from "./layouts/VendorLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 import UserManagement from "./pages/admin/UserManagement";
-import BrandCategories from "./pages/admin/BrandCategories";
+import BrandManagement from "./pages/admin/BrandManagement";
+import CategoryManagement from "./pages/admin/CategoryManagement";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminWallet from "./pages/admin/AdminWallet";
 import AdminMessages from "./pages/admin/AdminMessages";
@@ -50,7 +51,8 @@ const App = () => (
           <Route path="/admin" element={<SidebarProvider><AdminLayout /></SidebarProvider>}>
             <Route index element={<AdminDashboard />} />
             <Route path="users" element={<UserManagement />} />
-            <Route path="brands-categories" element={<BrandCategories />} />
+            <Route path="brands" element={<BrandManagement />} />
+            <Route path="categories" element={<CategoryManagement />} />
             <Route path="products" element={<AdminProductManagement />} />
             <Route path="orders" element={<AdminOrders />} />
             <Route path="analytics" element={<AdminAnalytics />} />
