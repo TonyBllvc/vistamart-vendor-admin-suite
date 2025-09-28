@@ -28,6 +28,7 @@ import UserDashboard from "./pages/user/UserDashboard";
 import AffiliateDashboard from "./pages/affiliate/AffiliateDashboard";
 import UserCart from "./pages/user/UserCart";
 import UserOrders from "./pages/user/UserOrders";
+import UserOrderDetails from "./pages/user/UserOrderDetails";
 import UserWishlist from "./pages/user/UserWishlist";
 import UserTransactions from "./pages/user/UserTransactions";
 import UserWallet from "./pages/user/UserWallet";
@@ -77,6 +78,7 @@ const App = () => (
             <Route index element={<UserDashboard />} />
             <Route path="cart" element={<UserCart />} />
             <Route path="orders" element={<UserOrders />} />
+            <Route path="orders/:orderId" element={<UserOrderDetails />} />
             <Route path="wishlist" element={<UserWishlist />} />
             <Route path="transactions" element={<UserTransactions />} />
             <Route path="wallet" element={<UserWallet />} />
@@ -88,6 +90,7 @@ const App = () => (
             <Route index element={<AffiliateDashboard />} />
             <Route path="cart" element={<UserCart />} />
             <Route path="orders" element={<UserOrders />} />
+            <Route path="orders/:orderId" element={<UserOrderDetails />} />
             <Route path="wishlist" element={<UserWishlist />} />
             <Route path="transactions" element={<UserTransactions />} />
             <Route path="wallet" element={<UserWallet />} />

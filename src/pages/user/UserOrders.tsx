@@ -2,8 +2,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Package, Eye, Download, Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const UserOrders = () => {
+  const navigate = useNavigate();
   const orders = [
     {
       id: "#12345",
@@ -89,7 +91,11 @@ const UserOrders = () => {
               </div>
               
               <div className="flex gap-2 mt-4 pt-4 border-t">
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => navigate(`/user/orders/${order.id.replace('#', '')}`)}
+                >
                   <Eye className="h-4 w-4 mr-2" />
                   View Details
                 </Button>
