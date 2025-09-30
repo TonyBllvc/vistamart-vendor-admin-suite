@@ -3,9 +3,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Package, Eye, Download, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useRef, useState } from "react";
+import Invoice from "@/components/Invoice";
+import { downloadInvoiceAsPDF } from "@/utils/downloadInvoice";
 
 const UserOrders = () => {
   const navigate = useNavigate();
+  const [downloadingOrderId, setDownloadingOrderId] = useState<string | null>(null);
+  const invoiceRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  
   const orders = [
     {
       id: "#12345",
@@ -47,6 +53,20 @@ const UserOrders = () => {
     }
   };
 
+  const handleDownloadInvoice = async (orderId: string) => {
+    const invoiceElement = invoiceRefs.current[orderId];
+    if (invoiceElement) {
+      setDownloadingOrderId(orderId);
+      try {
+        await downloadInvoiceAsPDF(invoiceElement, orderId.replace('#', ''));
+      } catch (error) {
+        console.error('Failed to download invoice:', error);
+      } finally {
+        setDownloadingOrderId(null);
+      }
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -59,7 +79,31 @@ const UserOrders = () => {
 
       <div className="space-y-4">
         {orders.map((order) => (
-          <Card key={order.id} className="hover:shadow-md transition-shadow">
+          <>
+            {/* Hidden invoice for PDF generation */}
+            <div className="hidden">
+              <Invoice
+                ref={(el) => (invoiceRefs.current[order.id] = el)}
+                orderId={order.id}
+                orderDate={order.date}
+                items={order.items}
+                subtotal="$289.97"
+                shipping="$15.00"
+                tax="$24.50"
+                total={order.total}
+                customerName="John Doe"
+                customerEmail="john.doe@example.com"
+                shippingAddress={{
+                  street: "123 Main Street",
+                  city: "New York",
+                  state: "NY",
+                  zipCode: "10001",
+                  country: "United States"
+                }}
+                status={order.status}
+              />
+            </div>
+            <Card key={order.id} className="hover:shadow-md transition-shadow">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -105,13 +149,19 @@ const UserOrders = () => {
                     Rate Products
                   </Button>
                 )}
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => handleDownloadInvoice(order.id)}
+                  disabled={downloadingOrderId === order.id}
+                >
                   <Download className="h-4 w-4 mr-2" />
-                  Invoice
+                  {downloadingOrderId === order.id ? 'Generating...' : 'Invoice'}
                 </Button>
               </div>
             </CardContent>
           </Card>
+          </>
         ))}
       </div>
     </div>

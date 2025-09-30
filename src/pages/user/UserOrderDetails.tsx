@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -21,15 +21,22 @@ import {
   Phone,
   Mail,
   Calendar,
-  DollarSign
+  DollarSign,
+  Download,
+  FileText
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import Invoice from "@/components/Invoice";
+import { downloadInvoiceAsPDF } from "@/utils/downloadInvoice";
 
 const UserOrderDetails = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isEditingAddress, setIsEditingAddress] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [showInvoice, setShowInvoice] = useState(false);
+  const invoiceRef = useRef<HTMLDivElement>(null);
 
   // Mock order data - in real app, this would come from API
   const order = {
@@ -120,6 +127,35 @@ const UserOrderDetails = () => {
       description: `Opening chat with ${vendorName}`,
     });
   };
+
+  const handleDownloadInvoice = async () => {
+    if (invoiceRef.current) {
+      setIsDownloading(true);
+      try {
+        await downloadInvoiceAsPDF(invoiceRef.current, orderId || '');
+        toast({
+          title: "Invoice Downloaded",
+          description: "Your invoice has been downloaded successfully.",
+        });
+      } catch (error) {
+        toast({
+          title: "Download Failed",
+          description: "Failed to download invoice. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsDownloading(false);
+      }
+    }
+  };
+
+  // Flatten items for invoice
+  const allItems = order.vendors.flatMap(vendor => 
+    vendor.items.map(item => ({
+      ...item,
+      vendor: vendor.name
+    }))
+  );
 
   return (
     <div className="space-y-6">
@@ -223,6 +259,71 @@ const UserOrderDetails = () => {
                   <Package className="h-4 w-4 mr-2" />
                   Track Package
                 </Button>
+                <Dialog open={showInvoice} onOpenChange={setShowInvoice}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline">
+                      <FileText className="h-4 w-4 mr-2" />
+                      View Invoice
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>Invoice {order.id}</DialogTitle>
+                    </DialogHeader>
+                    {/* Hidden invoice for PDF generation */}
+                    <div className="hidden">
+                      <Invoice
+                        ref={invoiceRef}
+                        orderId={order.id}
+                        orderDate={order.date}
+                        items={allItems}
+                        subtotal={order.subtotal}
+                        shipping={order.shipping}
+                        tax={order.tax}
+                        total={order.total}
+                        customerName={order.shippingAddress.name}
+                        customerEmail={order.shippingAddress.email}
+                        shippingAddress={{
+                          street: order.shippingAddress.street,
+                          city: order.shippingAddress.city,
+                          state: order.shippingAddress.state,
+                          zipCode: order.shippingAddress.zipCode,
+                          country: order.shippingAddress.country
+                        }}
+                        status={order.status}
+                      />
+                    </div>
+                    {/* Visible invoice */}
+                    <Invoice
+                      orderId={order.id}
+                      orderDate={order.date}
+                      items={allItems}
+                      subtotal={order.subtotal}
+                      shipping={order.shipping}
+                      tax={order.tax}
+                      total={order.total}
+                      customerName={order.shippingAddress.name}
+                      customerEmail={order.shippingAddress.email}
+                      shippingAddress={{
+                        street: order.shippingAddress.street,
+                        city: order.shippingAddress.city,
+                        state: order.shippingAddress.state,
+                        zipCode: order.shippingAddress.zipCode,
+                        country: order.shippingAddress.country
+                      }}
+                      status={order.status}
+                    />
+                    <div className="flex justify-end gap-2 mt-4 pt-4 border-t">
+                      <Button 
+                        onClick={handleDownloadInvoice}
+                        disabled={isDownloading}
+                      >
+                        <Download className="h-4 w-4 mr-2" />
+                        {isDownloading ? 'Generating PDF...' : 'Download PDF'}
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
                 <Button variant="outline">
                   <MessageSquare className="h-4 w-4 mr-2" />
                   Contact Support
