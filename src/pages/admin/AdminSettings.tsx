@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,11 +19,99 @@ import {
   Send,
   DollarSign,
   Image as ImageIcon,
-  Users
+  Users,
+  Search,
+  Plus,
+  X,
+  Upload,
+  Trash2
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+
+// Mock data for users
+const mockUsers = [
+  { id: 1, email: "john@example.com", name: "John Doe", role: "user", status: "active" },
+  { id: 2, email: "vendor@example.com", name: "Vendor Smith", role: "vendor", status: "active" },
+  { id: 3, email: "banned@example.com", name: "Banned User", role: "user", status: "banned" },
+  { id: 4, email: "admin@example.com", name: "Admin User", role: "admin", status: "active" },
+];
 
 const AdminSettings = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [customFees, setCustomFees] = useState([
+    { id: 1, name: "Vendor Commission", value: "85", type: "percentage" },
+    { id: 2, name: "Affiliate Commission", value: "5", type: "percentage" },
+    { id: 3, name: "Processing Fee", value: "2.5", type: "percentage" },
+    { id: 4, name: "Withdrawal Fee", value: "2.00", type: "fixed" },
+  ]);
+  const [selectedPage, setSelectedPage] = useState("Home");
+  const [uploadedImages, setUploadedImages] = useState<{[key: string]: string[]}>({
+    Home: [],
+    Products: [],
+    Categories: [],
+    Blog: [],
+    FAQ: []
+  });
+  const [stagedImages, setStagedImages] = useState<File[]>([]);
+
+  const filteredUsers = mockUsers.filter(user => 
+    user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const addCustomFee = () => {
+    setCustomFees([...customFees, { 
+      id: Date.now(), 
+      name: "", 
+      value: "0", 
+      type: "percentage" 
+    }]);
+  };
+
+  const removeFee = (id: number) => {
+    setCustomFees(customFees.filter(fee => fee.id !== id));
+  };
+
+  const updateFee = (id: number, field: string, value: string) => {
+    setCustomFees(customFees.map(fee => 
+      fee.id === id ? { ...fee, [field]: value } : fee
+    ));
+  };
+
+  const handleImageStage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const currentImages = uploadedImages[selectedPage]?.length || 0;
+    const availableSlots = 3 - currentImages;
+    
+    if (files.length + stagedImages.length > availableSlots) {
+      alert(`You can only upload ${availableSlots} more image(s) for this page`);
+      return;
+    }
+    
+    setStagedImages([...stagedImages, ...files]);
+  };
+
+  const removeStagedImage = (index: number) => {
+    setStagedImages(stagedImages.filter((_, i) => i !== index));
+  };
+
+  const uploadStagedImages = () => {
+    const urls = stagedImages.map(file => URL.createObjectURL(file));
+    setUploadedImages({
+      ...uploadedImages,
+      [selectedPage]: [...(uploadedImages[selectedPage] || []), ...urls]
+    });
+    setStagedImages([]);
+  };
+
+  const removeUploadedImage = (page: string, index: number) => {
+    setUploadedImages({
+      ...uploadedImages,
+      [page]: uploadedImages[page].filter((_, i) => i !== index)
+    });
+  };
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
@@ -281,29 +370,55 @@ const AdminSettings = () => {
             <CardDescription>Manage user account access</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="userEmail">User Email</Label>
-              <Input id="userEmail" type="email" placeholder="user@example.com" />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="banReason">Reason for Action (Optional)</Label>
-              <Textarea 
-                id="banReason" 
-                placeholder="Enter reason for banning/unbanning this user"
-                rows={3}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input 
+                placeholder="Search users by email or name..." 
+                className="pl-10"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            
-            <div className="flex gap-3">
-              <Button variant="destructive" className="flex-1">
-                <UserX className="h-4 w-4 mr-2" />
-                Ban User
-              </Button>
-              <Button variant="outline" className="flex-1">
-                <UserCheck className="h-4 w-4 mr-2" />
-                Unban User
-              </Button>
+
+            <div className="border rounded-lg overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredUsers.map(user => (
+                    <TableRow key={user.id}>
+                      <TableCell className="font-medium">{user.email}</TableCell>
+                      <TableCell>{user.name}</TableCell>
+                      <TableCell>
+                        <Badge variant={user.status === "banned" ? "destructive" : "default"}>
+                          {user.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          {user.status === "active" ? (
+                            <Button size="sm" variant="destructive">
+                              <UserX className="h-3 w-3 mr-1" />
+                              Ban
+                            </Button>
+                          ) : (
+                            <Button size="sm" variant="outline">
+                              <UserCheck className="h-3 w-3 mr-1" />
+                              Unban
+                            </Button>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
           </CardContent>
         </Card>
@@ -318,30 +433,58 @@ const AdminSettings = () => {
             <CardDescription>Update user roles and permissions</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="roleUserEmail">User Email</Label>
-              <Input id="roleUserEmail" type="email" placeholder="user@example.com" />
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input 
+                placeholder="Search users by email or name..." 
+                className="pl-10"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="newRole">New Role</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="user">User</SelectItem>
-                  <SelectItem value="vendor">Vendor</SelectItem>
-                  <SelectItem value="admin">Admin</SelectItem>
-                  <SelectItem value="moderator">Moderator</SelectItem>
-                </SelectContent>
-              </Select>
+
+            <div className="border rounded-lg overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Current Role</TableHead>
+                    <TableHead>Change Role</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredUsers.map(user => (
+                    <TableRow key={user.id}>
+                      <TableCell className="font-medium">{user.email}</TableCell>
+                      <TableCell>{user.name}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{user.role}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Select defaultValue={user.role}>
+                            <SelectTrigger className="w-32">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="user">User</SelectItem>
+                              <SelectItem value="vendor">Vendor</SelectItem>
+                              <SelectItem value="admin">Admin</SelectItem>
+                              <SelectItem value="moderator">Moderator</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <Button size="sm">
+                            <UserCog className="h-3 w-3 mr-1" />
+                            Update
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
-            
-            <Button className="w-full">
-              <UserCog className="h-4 w-4 mr-2" />
-              Update User Role
-            </Button>
           </CardContent>
         </Card>
 
@@ -399,46 +542,80 @@ const AdminSettings = () => {
             <CardDescription>Configure payment distribution and fees</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="vendorCommission">Vendor Commission (%)</Label>
-                <Input id="vendorCommission" type="number" defaultValue="85" min="0" max="100" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="affiliateCommission">Affiliate Commission (%)</Label>
-                <Input id="affiliateCommission" type="number" defaultValue="5" min="0" max="100" />
-              </div>
+            <div className="space-y-4">
+              {customFees.map((fee, index) => (
+                <div key={fee.id} className="grid grid-cols-12 gap-3 items-end p-3 border rounded-lg">
+                  <div className="col-span-5 space-y-2">
+                    <Label>Fee Name</Label>
+                    <Input 
+                      value={fee.name}
+                      onChange={(e) => updateFee(fee.id, 'name', e.target.value)}
+                      placeholder="Fee name"
+                    />
+                  </div>
+                  <div className="col-span-3 space-y-2">
+                    <Label>Value</Label>
+                    <Input 
+                      type="number"
+                      value={fee.value}
+                      onChange={(e) => updateFee(fee.id, 'value', e.target.value)}
+                      placeholder="0"
+                    />
+                  </div>
+                  <div className="col-span-3 space-y-2">
+                    <Label>Type</Label>
+                    <Select 
+                      value={fee.type}
+                      onValueChange={(value) => updateFee(fee.id, 'type', value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="percentage">Percentage (%)</SelectItem>
+                        <SelectItem value="fixed">Fixed ($)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="col-span-1">
+                    <Button 
+                      size="sm" 
+                      variant="ghost"
+                      onClick={() => removeFee(fee.id)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
             </div>
-            
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="processingFee">Processing Fee (%)</Label>
-                <Input id="processingFee" type="number" defaultValue="2.5" min="0" max="100" />
+
+            <Button onClick={addCustomFee} variant="outline" className="w-full">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Custom Fee
+            </Button>
+
+            <div className="pt-4 border-t space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="minWithdrawal">Minimum Withdrawal Amount ($)</Label>
+                  <Input id="minWithdrawal" type="number" defaultValue="50" min="0" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="maxWithdrawal">Maximum Withdrawal Amount ($)</Label>
+                  <Input id="maxWithdrawal" type="number" defaultValue="10000" min="0" />
+                </div>
               </div>
+              
               <div className="space-y-2">
-                <Label htmlFor="withdrawalFee">Withdrawal Fee ($)</Label>
-                <Input id="withdrawalFee" type="number" defaultValue="2.00" min="0" step="0.01" />
+                <Label htmlFor="payoutDelay">Payout Delay (days)</Label>
+                <Input id="payoutDelay" type="number" defaultValue="7" min="0" />
               </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="minWithdrawal">Minimum Withdrawal Amount ($)</Label>
-              <Input id="minWithdrawal" type="number" defaultValue="50" min="0" />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="maxWithdrawal">Maximum Withdrawal Amount ($)</Label>
-              <Input id="maxWithdrawal" type="number" defaultValue="10000" min="0" />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="payoutDelay">Payout Delay (days)</Label>
-              <Input id="payoutDelay" type="number" defaultValue="7" min="0" />
             </div>
           </CardContent>
         </Card>
 
-        {/* Featured Ads Management */}
+        {/* Featured Hero Images Management */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -448,51 +625,112 @@ const AdminSettings = () => {
             <CardDescription>Manage hero images for different pages (max 3 per page)</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {["Home", "Products", "Categories", "Blog", "FAQ"].map((page) => (
-              <div key={page} className="space-y-4 p-4 border rounded-lg">
-                <h3 className="font-semibold">{page} Page Hero</h3>
-                
-                <div className="space-y-3">
-                  {[1, 2, 3].map((num) => (
-                    <div key={num} className="flex items-center gap-3">
-                      <Label className="w-24">Image {num}:</Label>
-                      <Input type="file" accept="image/*" className="flex-1" />
-                      <Button variant="outline" size="sm">
-                        Preview
+            <div className="space-y-2">
+              <Label>Select Page</Label>
+              <Select value={selectedPage} onValueChange={setSelectedPage}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Home">Home Page</SelectItem>
+                  <SelectItem value="Products">Products Page</SelectItem>
+                  <SelectItem value="Categories">Categories Page</SelectItem>
+                  <SelectItem value="Blog">Blog Page</SelectItem>
+                  <SelectItem value="FAQ">FAQ Page</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Uploaded Images */}
+            <div className="space-y-2">
+              <Label>Uploaded Images ({uploadedImages[selectedPage]?.length || 0}/3)</Label>
+              <div className="grid grid-cols-3 gap-4">
+                {uploadedImages[selectedPage]?.map((url, index) => (
+                  <div key={index} className="relative aspect-video border-2 border-dashed rounded-lg overflow-hidden group">
+                    <img src={url} alt={`Hero ${index + 1}`} className="w-full h-full object-cover" />
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={() => removeUploadedImage(selectedPage, index)}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                ))}
+                {Array.from({ length: 3 - (uploadedImages[selectedPage]?.length || 0) }).map((_, index) => (
+                  <div key={`empty-${index}`} className="aspect-video border-2 border-dashed rounded-lg flex items-center justify-center bg-muted/20">
+                    <ImageIcon className="h-8 w-8 text-muted-foreground" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Staged Images for Upload */}
+            {stagedImages.length > 0 && (
+              <div className="space-y-2">
+                <Label>Staged for Upload ({stagedImages.length})</Label>
+                <div className="grid grid-cols-3 gap-4">
+                  {stagedImages.map((file, index) => (
+                    <div key={index} className="relative aspect-video border-2 border-primary border-dashed rounded-lg overflow-hidden group">
+                      <img 
+                        src={URL.createObjectURL(file)} 
+                        alt={`Staged ${index + 1}`} 
+                        className="w-full h-full object-cover opacity-70" 
+                      />
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="absolute top-2 right-2"
+                        onClick={() => removeStagedImage(index)}
+                      >
+                        <X className="h-3 w-3" />
                       </Button>
-                      <Button variant="destructive" size="sm">
-                        Remove
-                      </Button>
+                      <Badge className="absolute bottom-2 left-2">Pending</Badge>
                     </div>
                   ))}
                 </div>
-                
-                <div className="space-y-2">
-                  <Label>Display Order</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select display order" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="sequential">Sequential</SelectItem>
-                      <SelectItem value="random">Random</SelectItem>
-                      <SelectItem value="slideshow">Slideshow</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor={`${page.toLowerCase()}Duration`}>Slideshow Duration (seconds)</Label>
-                  <Input 
-                    id={`${page.toLowerCase()}Duration`} 
-                    type="number" 
-                    defaultValue="5" 
-                    min="1" 
-                    className="w-32"
-                  />
-                </div>
               </div>
-            ))}
+            )}
+
+            {/* Upload Controls */}
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageStage}
+                  disabled={(uploadedImages[selectedPage]?.length || 0) >= 3}
+                  className="cursor-pointer"
+                />
+              </div>
+              {stagedImages.length > 0 && (
+                <Button onClick={uploadStagedImages}>
+                  <Upload className="h-4 w-4 mr-2" />
+                  Upload {stagedImages.length} Image{stagedImages.length > 1 ? 's' : ''}
+                </Button>
+              )}
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="displayOrder">Display Order</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select order" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="sequential">Sequential</SelectItem>
+                    <SelectItem value="random">Random</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="slideshowDuration">Slideshow Duration (seconds)</Label>
+                <Input id="slideshowDuration" type="number" defaultValue="5" min="1" />
+              </div>
+            </div>
           </CardContent>
         </Card>
 
@@ -503,63 +741,85 @@ const AdminSettings = () => {
               <Users className="h-5 w-5" />
               Account Management
             </CardTitle>
-            <CardDescription>View and manage all platform accounts</CardDescription>
+            <CardDescription>View and manage all user, vendor, and admin accounts</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="accountSearch">Search Accounts</Label>
-              <Input 
-                id="accountSearch" 
-                placeholder="Search by name, email, or ID..." 
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label>Filter by Account Type</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="All accounts" />
+            <div className="flex gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input 
+                  placeholder="Search accounts..." 
+                  className="pl-10"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              <Select defaultValue="all">
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Account type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Accounts</SelectItem>
-                  <SelectItem value="users">Users</SelectItem>
-                  <SelectItem value="vendors">Vendors</SelectItem>
-                  <SelectItem value="admins">Admins</SelectItem>
-                  <SelectItem value="banned">Banned Accounts</SelectItem>
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="user">Users</SelectItem>
+                  <SelectItem value="vendor">Vendors</SelectItem>
+                  <SelectItem value="admin">Admins</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
-            
-            <div className="space-y-2">
-              <Label>Filter by Status</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="All statuses" />
+              <Select defaultValue="all">
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="active">Active</SelectItem>
                   <SelectItem value="inactive">Inactive</SelectItem>
-                  <SelectItem value="suspended">Suspended</SelectItem>
-                  <SelectItem value="pending">Pending Verification</SelectItem>
+                  <SelectItem value="banned">Banned</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+            
+            <div className="border rounded-lg overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredUsers.map(user => (
+                    <TableRow key={user.id}>
+                      <TableCell className="font-medium">{user.email}</TableCell>
+                      <TableCell>{user.name}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{user.role}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={user.status === "banned" ? "destructive" : "default"}>
+                          {user.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Button size="sm" variant="outline">
+                          View Details
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
             
             <div className="flex gap-3">
-              <Button className="flex-1">
-                <Users className="h-4 w-4 mr-2" />
-                View All Accounts
+              <Button variant="outline" className="flex-1">
+                Export to CSV
               </Button>
               <Button variant="outline" className="flex-1">
-                Export Data
+                Export to PDF
               </Button>
-            </div>
-            
-            <div className="p-4 bg-muted rounded-lg">
-              <p className="text-sm text-muted-foreground">
-                <strong>Note:</strong> This section provides access to account information excluding sensitive data like passwords, payment details, and private communications. All actions are logged for security purposes.
-              </p>
             </div>
           </CardContent>
         </Card>
