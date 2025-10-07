@@ -37,6 +37,8 @@ import { Switch } from "@/components/ui/switch";
 const BrandManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingBrand, setEditingBrand] = useState<any>(null);
   const [newBrand, setNewBrand] = useState({
     name: "",
     description: "",
@@ -121,8 +123,22 @@ const BrandManagement = () => {
     console.log("Verifying brand:", brandId);
   };
 
+  const handleEditBrand = (brand: any) => {
+    setEditingBrand(brand);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateBrand = () => {
+    console.log("Updating brand:", editingBrand);
+    setIsEditDialogOpen(false);
+    setEditingBrand(null);
+  };
+
   const handleDeleteBrand = (brandId: number) => {
-    console.log("Deleting brand:", brandId);
+    if (confirm("Are you sure you want to delete this brand? This action cannot be undone.")) {
+      console.log("Deleting brand:", brandId);
+      // Add delete logic here
+    }
   };
 
   const totalProducts = brands.reduce((sum, brand) => sum + brand.products, 0);
@@ -271,6 +287,78 @@ const BrandManagement = () => {
                 </div>
               </DialogContent>
             </Dialog>
+
+            <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+              <DialogContent className="sm:max-w-[525px]">
+                <DialogHeader>
+                  <DialogTitle>Edit Brand</DialogTitle>
+                  <DialogDescription>
+                    Update the brand information below.
+                  </DialogDescription>
+                </DialogHeader>
+                {editingBrand && (
+                  <div className="grid gap-4 py-4">
+                    <div className="grid gap-2">
+                      <label htmlFor="edit-brand-name" className="text-sm font-medium">Brand Name</label>
+                      <Input
+                        id="edit-brand-name"
+                        placeholder="Enter brand name"
+                        value={editingBrand.name}
+                        onChange={(e) => setEditingBrand({...editingBrand, name: e.target.value})}
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <label htmlFor="edit-brand-description" className="text-sm font-medium">Description</label>
+                      <Textarea
+                        id="edit-brand-description"
+                        placeholder="Enter brand description"
+                        value={editingBrand.description}
+                        onChange={(e) => setEditingBrand({...editingBrand, description: e.target.value})}
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <label htmlFor="edit-brand-website" className="text-sm font-medium">Website URL</label>
+                      <Input
+                        id="edit-brand-website"
+                        placeholder="https://example.com"
+                        value={editingBrand.website}
+                        onChange={(e) => setEditingBrand({...editingBrand, website: e.target.value})}
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <label htmlFor="edit-brand-category" className="text-sm font-medium">Primary Category</label>
+                      <select
+                        id="edit-brand-category"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                        value={editingBrand.category}
+                        onChange={(e) => setEditingBrand({...editingBrand, category: e.target.value})}
+                      >
+                        <option value="">Select a category</option>
+                        {categories.map((category) => (
+                          <option key={category} value={category}>{category}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        id="edit-brand-verified"
+                        checked={editingBrand.verified}
+                        onCheckedChange={(checked) => setEditingBrand({...editingBrand, verified: checked})}
+                      />
+                      <label htmlFor="edit-brand-verified" className="text-sm font-medium">Verified Brand</label>
+                    </div>
+                  </div>
+                )}
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleUpdateBrand}>
+                    Update Brand
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -364,11 +452,19 @@ const BrandManagement = () => {
                             <Check className="h-4 w-4" />
                           </Button>
                         )}
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleEditBrand(brand)}
+                        >
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="sm" onClick={() => handleDeleteBrand(brand.id)}>
-                          <Trash2 className="h-4 w-4" />
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => handleDeleteBrand(brand.id)}
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
                         </Button>
                       </div>
                     </TableCell>

@@ -35,6 +35,8 @@ import { Switch } from "@/components/ui/switch";
 const CategoryManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<any>(null);
   const [newCategory, setNewCategory] = useState({
     name: "",
     description: "",
@@ -141,8 +143,22 @@ const CategoryManagement = () => {
     console.log("Toggling category status:", categoryId);
   };
 
+  const handleEditCategory = (category: any) => {
+    setEditingCategory(category);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateCategory = () => {
+    console.log("Updating category:", editingCategory);
+    setIsEditDialogOpen(false);
+    setEditingCategory(null);
+  };
+
   const handleDeleteCategory = (categoryId: number) => {
-    console.log("Deleting category:", categoryId);
+    if (confirm("Are you sure you want to delete this category? This action cannot be undone.")) {
+      console.log("Deleting category:", categoryId);
+      // Add delete logic here
+    }
   };
 
   const totalProducts = categories.reduce((sum, category) => sum + category.products, 0);
@@ -291,6 +307,78 @@ const CategoryManagement = () => {
                 </div>
               </DialogContent>
             </Dialog>
+
+            <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+              <DialogContent className="sm:max-w-[525px]">
+                <DialogHeader>
+                  <DialogTitle>Edit Category</DialogTitle>
+                  <DialogDescription>
+                    Update the category information below.
+                  </DialogDescription>
+                </DialogHeader>
+                {editingCategory && (
+                  <div className="grid gap-4 py-4">
+                    <div className="grid gap-2">
+                      <label htmlFor="edit-category-name" className="text-sm font-medium">Category Name</label>
+                      <Input
+                        id="edit-category-name"
+                        placeholder="Enter category name"
+                        value={editingCategory.name}
+                        onChange={(e) => setEditingCategory({...editingCategory, name: e.target.value})}
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <label htmlFor="edit-category-description" className="text-sm font-medium">Description</label>
+                      <Textarea
+                        id="edit-category-description"
+                        placeholder="Enter category description"
+                        value={editingCategory.description}
+                        onChange={(e) => setEditingCategory({...editingCategory, description: e.target.value})}
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <label htmlFor="edit-category-icon" className="text-sm font-medium">Icon (Emoji)</label>
+                      <Input
+                        id="edit-category-icon"
+                        placeholder="📱"
+                        value={editingCategory.icon}
+                        onChange={(e) => setEditingCategory({...editingCategory, icon: e.target.value})}
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <label htmlFor="edit-parent-category" className="text-sm font-medium">Parent Category (Optional)</label>
+                      <select
+                        id="edit-parent-category"
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                        value={editingCategory.parentCategory || ""}
+                        onChange={(e) => setEditingCategory({...editingCategory, parentCategory: e.target.value})}
+                      >
+                        <option value="">No parent (Main category)</option>
+                        {parentCategories.map((category) => (
+                          <option key={category.id} value={category.name}>{category.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        id="edit-category-active"
+                        checked={editingCategory.active}
+                        onCheckedChange={(checked) => setEditingCategory({...editingCategory, active: checked})}
+                      />
+                      <label htmlFor="edit-category-active" className="text-sm font-medium">Active Category</label>
+                    </div>
+                  </div>
+                )}
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleUpdateCategory}>
+                    Update Category
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -365,11 +453,19 @@ const CategoryManagement = () => {
                         >
                           <Switch checked={category.active} />
                         </Button>
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleEditCategory(category)}
+                        >
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="sm" onClick={() => handleDeleteCategory(category.id)}>
-                          <Trash2 className="h-4 w-4" />
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => handleDeleteCategory(category.id)}
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
                         </Button>
                       </div>
                     </TableCell>

@@ -46,15 +46,14 @@ const AdminSettings = () => {
     { id: 3, name: "Processing Fee", value: "2.5", type: "percentage" },
     { id: 4, name: "Withdrawal Fee", value: "2.00", type: "fixed" },
   ]);
-  const [selectedPage, setSelectedPage] = useState("Home");
-  const [uploadedImages, setUploadedImages] = useState<{[key: string]: string[]}>({
-    Home: [],
-    Products: [],
-    Categories: [],
-    Blog: [],
-    FAQ: []
-  });
+  const [selectedPage, setSelectedPage] = useState("home");
+  const [uploadedImages, setUploadedImages] = useState<{page: string, url: string, order: number}[]>([
+    { page: "home", url: "/placeholder.svg", order: 1 },
+    { page: "home", url: "/placeholder.svg", order: 2 },
+    { page: "products", url: "/placeholder.svg", order: 1 },
+  ]);
   const [stagedImages, setStagedImages] = useState<File[]>([]);
+  const [expandedUserId, setExpandedUserId] = useState<number | null>(null);
 
   const filteredUsers = mockUsers.filter(user => 
     user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -82,7 +81,7 @@ const AdminSettings = () => {
 
   const handleImageStage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    const currentImages = uploadedImages[selectedPage]?.length || 0;
+    const currentImages = uploadedImages.filter(img => img.page === selectedPage).length;
     const availableSlots = 3 - currentImages;
     
     if (files.length + stagedImages.length > availableSlots) {
@@ -98,19 +97,17 @@ const AdminSettings = () => {
   };
 
   const uploadStagedImages = () => {
-    const urls = stagedImages.map(file => URL.createObjectURL(file));
-    setUploadedImages({
-      ...uploadedImages,
-      [selectedPage]: [...(uploadedImages[selectedPage] || []), ...urls]
-    });
+    const newImages = stagedImages.map((file, index) => ({
+      page: selectedPage,
+      url: URL.createObjectURL(file),
+      order: uploadedImages.filter(img => img.page === selectedPage).length + index + 1
+    }));
+    setUploadedImages([...uploadedImages, ...newImages]);
     setStagedImages([]);
   };
 
-  const removeUploadedImage = (page: string, index: number) => {
-    setUploadedImages({
-      ...uploadedImages,
-      [page]: uploadedImages[page].filter((_, i) => i !== index)
-    });
+  const removeUploadedImage = (index: number) => {
+    setUploadedImages(uploadedImages.filter((_, i) => i !== index));
   };
   return (
     <div className="space-y-6">
@@ -627,38 +624,64 @@ const AdminSettings = () => {
           <CardContent className="space-y-6">
             <div className="space-y-2">
               <Label>Select Page</Label>
-              <Select value={selectedPage} onValueChange={setSelectedPage}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Home">Home Page</SelectItem>
-                  <SelectItem value="Products">Products Page</SelectItem>
-                  <SelectItem value="Categories">Categories Page</SelectItem>
-                  <SelectItem value="Blog">Blog Page</SelectItem>
-                  <SelectItem value="FAQ">FAQ Page</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="grid grid-cols-5 gap-2">
+                {["home", "products", "categories", "blog", "faq"].map((page) => {
+                  const pageImages = uploadedImages.filter(img => img.page === page);
+                  const imageCount = pageImages.length;
+                  const status = imageCount === 3 ? "complete" : imageCount > 0 ? "partial" : "empty";
+                  
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => setSelectedPage(page)}
+                      className={`relative p-4 rounded-lg border-2 transition-all ${
+                        selectedPage === page 
+                          ? "border-primary bg-primary/10" 
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <div className="text-center space-y-2">
+                        <p className="font-medium capitalize text-sm">{page}</p>
+                        <div className="flex justify-center gap-1">
+                          {[1, 2, 3].map((slot) => (
+                            <div
+                              key={slot}
+                              className={`w-2 h-2 rounded-full ${
+                                slot <= imageCount
+                                  ? status === "complete"
+                                    ? "bg-success"
+                                    : "bg-warning"
+                                  : "bg-muted"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <p className="text-xs text-muted-foreground">{imageCount}/3</p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Uploaded Images */}
             <div className="space-y-2">
-              <Label>Uploaded Images ({uploadedImages[selectedPage]?.length || 0}/3)</Label>
+              <Label>Uploaded Images ({uploadedImages.filter(img => img.page === selectedPage).length}/3)</Label>
               <div className="grid grid-cols-3 gap-4">
-                {uploadedImages[selectedPage]?.map((url, index) => (
+                {uploadedImages.filter(img => img.page === selectedPage).map((image, index) => (
                   <div key={index} className="relative aspect-video border-2 border-dashed rounded-lg overflow-hidden group">
-                    <img src={url} alt={`Hero ${index + 1}`} className="w-full h-full object-cover" />
+                    <img src={image.url} alt={`Hero ${index + 1}`} className="w-full h-full object-cover" />
                     <Button
                       size="sm"
                       variant="destructive"
                       className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => removeUploadedImage(selectedPage, index)}
+                      onClick={() => removeUploadedImage(uploadedImages.indexOf(image))}
                     >
                       <Trash2 className="h-3 w-3" />
                     </Button>
                   </div>
                 ))}
-                {Array.from({ length: 3 - (uploadedImages[selectedPage]?.length || 0) }).map((_, index) => (
+                {Array.from({ length: 3 - uploadedImages.filter(img => img.page === selectedPage).length }).map((_, index) => (
                   <div key={`empty-${index}`} className="aspect-video border-2 border-dashed rounded-lg flex items-center justify-center bg-muted/20">
                     <ImageIcon className="h-8 w-8 text-muted-foreground" />
                   </div>
@@ -701,7 +724,7 @@ const AdminSettings = () => {
                   accept="image/*"
                   multiple
                   onChange={handleImageStage}
-                  disabled={(uploadedImages[selectedPage]?.length || 0) >= 3}
+                  disabled={uploadedImages.filter(img => img.page === selectedPage).length >= 3}
                   className="cursor-pointer"
                 />
               </div>
@@ -791,23 +814,59 @@ const AdminSettings = () => {
                 </TableHeader>
                 <TableBody>
                   {filteredUsers.map(user => (
-                    <TableRow key={user.id}>
-                      <TableCell className="font-medium">{user.email}</TableCell>
-                      <TableCell>{user.name}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{user.role}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={user.status === "banned" ? "destructive" : "default"}>
-                          {user.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Button size="sm" variant="outline">
-                          View Details
-                        </Button>
-                      </TableCell>
-                    </TableRow>
+                    <>
+                      <TableRow key={user.id}>
+                        <TableCell className="font-medium">{user.email}</TableCell>
+                        <TableCell>{user.name}</TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{user.role}</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={user.status === "banned" ? "destructive" : "default"}>
+                            {user.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => setExpandedUserId(expandedUserId === user.id ? null : user.id)}
+                          >
+                            {expandedUserId === user.id ? "Hide Details" : "View Details"}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                      {expandedUserId === user.id && (
+                        <TableRow>
+                          <TableCell colSpan={5} className="bg-muted/50">
+                            <div className="p-4 space-y-4">
+                              <h4 className="font-semibold text-lg">Detailed Account Information</h4>
+                              <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                  <p className="text-sm"><span className="font-medium">User ID:</span> {user.id}</p>
+                                  <p className="text-sm"><span className="font-medium">Full Name:</span> {user.name}</p>
+                                  <p className="text-sm"><span className="font-medium">Email:</span> {user.email}</p>
+                                  <p className="text-sm"><span className="font-medium">Role:</span> {user.role}</p>
+                                  <p className="text-sm"><span className="font-medium">Status:</span> {user.status}</p>
+                                </div>
+                                <div className="space-y-2">
+                                  <p className="text-sm"><span className="font-medium">Joined Date:</span> {user.role === 'vendor' ? '2024-01-15' : '2024-02-20'}</p>
+                                  <p className="text-sm"><span className="font-medium">Last Active:</span> {user.role === 'vendor' ? '2 hours ago' : '1 day ago'}</p>
+                                  <p className="text-sm"><span className="font-medium">Total Orders:</span> {user.role === 'user' ? '12' : 'N/A'}</p>
+                                  <p className="text-sm"><span className="font-medium">Total Spent:</span> {user.role === 'user' ? '$1,234' : 'N/A'}</p>
+                                  <p className="text-sm"><span className="font-medium">Products Listed:</span> {user.role === 'vendor' ? '45' : 'N/A'}</p>
+                                </div>
+                              </div>
+                              <div className="flex gap-2 pt-2">
+                                <Button variant="outline" size="sm">Send Message</Button>
+                                <Button variant="outline" size="sm">View Activity Log</Button>
+                                <Button variant="destructive" size="sm">Suspend Account</Button>
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </>
                   ))}
                 </TableBody>
               </Table>
