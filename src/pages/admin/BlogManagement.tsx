@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Plus, Edit, Trash2, Eye } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Search, Plus, Edit, Trash2, Eye, FileText, CheckCircle, FileClock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {
   AlertDialog,
@@ -32,7 +32,7 @@ interface Blog {
 const BlogManagement = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [activeTab, setActiveTab] = useState("all");
   const [blogToDelete, setBlogToDelete] = useState<string | null>(null);
 
   // Mock data - replace with actual API call
@@ -69,10 +69,17 @@ const BlogManagement = () => {
     },
   ]);
 
+  const stats = {
+    total: blogs.length,
+    published: blogs.filter((b) => b.status === "published").length,
+    drafts: blogs.filter((b) => b.status === "draft").length,
+    totalViews: blogs.reduce((sum, b) => sum + b.views, 0),
+  };
+
   const filteredBlogs = blogs.filter((blog) => {
     const matchesSearch = blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       blog.author.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter === "all" || blog.status === statusFilter;
+    const matchesStatus = activeTab === "all" || blog.status === activeTab;
     return matchesSearch && matchesStatus;
   });
 
@@ -95,9 +102,52 @@ const BlogManagement = () => {
         </Button>
       </div>
 
+      <div className="grid gap-4 md:grid-cols-4 mb-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Posts</CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.total}</div>
+            <p className="text-xs text-muted-foreground">All blog posts</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Published</CardTitle>
+            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.published}</div>
+            <p className="text-xs text-muted-foreground">Live on the site</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Drafts</CardTitle>
+            <FileClock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.drafts}</div>
+            <p className="text-xs text-muted-foreground">Work in progress</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Views</CardTitle>
+            <Eye className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalViews.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">Across all posts</p>
+          </CardContent>
+        </Card>
+      </div>
+
       <Card>
         <CardHeader>
-          <CardTitle>All Blog Posts</CardTitle>
+          <CardTitle>Blog Posts</CardTitle>
           <CardDescription>Manage your blog content and track performance</CardDescription>
         </CardHeader>
         <CardContent>
@@ -111,17 +161,22 @@ const BlogManagement = () => {
                 className="pl-10"
               />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Posts</SelectItem>
-                <SelectItem value="published">Published</SelectItem>
-                <SelectItem value="draft">Drafts</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
+
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+            <TabsList>
+              <TabsTrigger value="all">
+                All Posts ({stats.total})
+              </TabsTrigger>
+              <TabsTrigger value="published">
+                Published ({stats.published})
+              </TabsTrigger>
+              <TabsTrigger value="draft">
+                Drafts ({stats.drafts})
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value={activeTab} className="space-y-4">
 
           <div className="rounded-md border">
             <Table>
@@ -197,6 +252,8 @@ const BlogManagement = () => {
               </TableBody>
             </Table>
           </div>
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
 
