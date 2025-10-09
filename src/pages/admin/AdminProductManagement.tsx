@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,16 @@ import {
   TrendingUp,
   AlertTriangle,
   Flag,
-  MoreHorizontal
+  MoreHorizontal,
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  DollarSign,
+  Tag,
+  BarChart,
+  ShoppingCart
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -22,16 +32,37 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 
 const AdminProductManagement = () => {
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
   const pendingProducts = [
     {
       id: 1,
       name: "Wireless Bluetooth Headphones",
       vendor: "TechVendor Pro",
+      vendorEmail: "contact@techvendor.com",
+      vendorPhone: "+1 (555) 123-4567",
+      vendorAddress: "123 Tech Street, San Francisco, CA",
+      vendorJoined: "2023-06-15",
+      vendorRating: 4.8,
+      vendorTotalProducts: 42,
       sku: "WBH-001",
       price: "$89.99",
+      cost: "$45.00",
+      stock: 150,
       category: "Electronics",
+      description: "High-quality wireless Bluetooth headphones with noise cancellation, 40-hour battery life, and premium sound quality.",
+      specifications: "Bluetooth 5.0, Active Noise Cancellation, 40mm Drivers, 40-hour battery",
       submitted: "2024-01-15",
       status: "Pending Review",
       image: "📱",
@@ -40,10 +71,20 @@ const AdminProductManagement = () => {
     {
       id: 2,
       name: "Smart Fitness Watch",
-      vendor: "FitGear Store", 
+      vendor: "FitGear Store",
+      vendorEmail: "support@fitgear.com",
+      vendorPhone: "+1 (555) 987-6543",
+      vendorAddress: "456 Fitness Ave, New York, NY",
+      vendorJoined: "2023-08-20",
+      vendorRating: 4.6,
+      vendorTotalProducts: 28,
       sku: "SFW-002",
       price: "$199.99",
+      cost: "$110.00",
+      stock: 85,
       category: "Electronics",
+      description: "Advanced fitness tracking watch with heart rate monitoring, GPS, and water resistance up to 50m.",
+      specifications: "1.4\" AMOLED Display, GPS, Heart Rate Monitor, 7-day battery, IP68 Water Resistant",
       submitted: "2024-01-14",
       status: "Pending Review",
       image: "⌚",
@@ -118,6 +159,11 @@ const AdminProductManagement = () => {
 
   const handleFlag = (productId: number) => {
     console.log('Flagging product:', productId);
+  };
+
+  const handleViewDetails = (product: any) => {
+    setSelectedProduct(product);
+    setIsDetailsOpen(true);
   };
 
   return (
@@ -241,7 +287,7 @@ const AdminProductManagement = () => {
                       <Button 
                         variant="ghost" 
                         size="sm"
-                        onClick={() => console.log('View product details')}
+                        onClick={() => handleViewDetails(product)}
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
@@ -323,7 +369,11 @@ const AdminProductManagement = () => {
                     </div>
                     
                     <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="sm">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleViewDetails(product)}
+                      >
                         <Eye className="h-4 w-4" />
                       </Button>
                       <DropdownMenu>
@@ -405,7 +455,11 @@ const AdminProductManagement = () => {
                     </div>
                     
                     <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="sm">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleViewDetails(product)}
+                      >
                         <Eye className="h-4 w-4" />
                       </Button>
                     </div>
@@ -416,6 +470,204 @@ const AdminProductManagement = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Product Details Dialog */}
+      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Product Details</DialogTitle>
+            <DialogDescription>
+              Complete information about this product and vendor
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedProduct && (
+            <div className="space-y-6">
+              {/* Product Info */}
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <div className="w-full aspect-square bg-muted rounded-lg flex items-center justify-center text-6xl mb-4">
+                    {selectedProduct.image}
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Status</span>
+                      <Badge className={getStatusColor(selectedProduct.status)}>
+                        {selectedProduct.status}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">SKU</span>
+                      <span className="text-sm font-medium">{selectedProduct.sku}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Category</span>
+                      <span className="text-sm font-medium">{selectedProduct.category}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-2xl font-bold mb-2">{selectedProduct.name}</h3>
+                    <p className="text-muted-foreground text-sm">{selectedProduct.description}</p>
+                  </div>
+
+                  <Separator />
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <DollarSign className="h-4 w-4" />
+                        <span className="text-xs">Retail Price</span>
+                      </div>
+                      <p className="text-2xl font-bold text-primary">{selectedProduct.price}</p>
+                    </div>
+                    {selectedProduct.cost && (
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Tag className="h-4 w-4" />
+                          <span className="text-xs">Cost Price</span>
+                        </div>
+                        <p className="text-2xl font-bold">{selectedProduct.cost}</p>
+                      </div>
+                    )}
+                    {selectedProduct.stock && (
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Package className="h-4 w-4" />
+                          <span className="text-xs">Stock</span>
+                        </div>
+                        <p className="text-lg font-semibold">{selectedProduct.stock} units</p>
+                      </div>
+                    )}
+                    {selectedProduct.sales && (
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <ShoppingCart className="h-4 w-4" />
+                          <span className="text-xs">Total Sales</span>
+                        </div>
+                        <p className="text-lg font-semibold">{selectedProduct.sales}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {selectedProduct.specifications && (
+                    <>
+                      <Separator />
+                      <div>
+                        <h4 className="font-semibold mb-2">Specifications</h4>
+                        <p className="text-sm text-muted-foreground">{selectedProduct.specifications}</p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Vendor Info */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <User className="h-5 w-5" />
+                  Vendor Information
+                </h3>
+                <div className="grid md:grid-cols-2 gap-6 bg-muted/50 p-4 rounded-lg">
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <User className="h-4 w-4 text-muted-foreground mt-1" />
+                      <div>
+                        <p className="text-xs text-muted-foreground">Vendor Name</p>
+                        <p className="font-medium">{selectedProduct.vendor}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Mail className="h-4 w-4 text-muted-foreground mt-1" />
+                      <div>
+                        <p className="text-xs text-muted-foreground">Email</p>
+                        <p className="font-medium">{selectedProduct.vendorEmail}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Phone className="h-4 w-4 text-muted-foreground mt-1" />
+                      <div>
+                        <p className="text-xs text-muted-foreground">Phone</p>
+                        <p className="font-medium">{selectedProduct.vendorPhone}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <MapPin className="h-4 w-4 text-muted-foreground mt-1" />
+                      <div>
+                        <p className="text-xs text-muted-foreground">Address</p>
+                        <p className="font-medium">{selectedProduct.vendorAddress}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Calendar className="h-4 w-4 text-muted-foreground mt-1" />
+                      <div>
+                        <p className="text-xs text-muted-foreground">Joined</p>
+                        <p className="font-medium">{selectedProduct.vendorJoined}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <BarChart className="h-4 w-4 text-muted-foreground mt-1" />
+                      <div>
+                        <p className="text-xs text-muted-foreground">Performance</p>
+                        <p className="font-medium">
+                          {selectedProduct.vendorRating} ★ • {selectedProduct.vendorTotalProducts} Products
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end gap-2 pt-4 border-t">
+                {selectedProduct.status === "Pending Review" && (
+                  <>
+                    <Button 
+                      variant="outline"
+                      onClick={() => {
+                        handleReject(selectedProduct.id);
+                        setIsDetailsOpen(false);
+                      }}
+                      className="text-destructive"
+                    >
+                      <XCircle className="h-4 w-4 mr-2" />
+                      Reject Product
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        handleApprove(selectedProduct.id);
+                        setIsDetailsOpen(false);
+                      }}
+                      className="bg-success hover:bg-success/90"
+                    >
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Approve Product
+                    </Button>
+                  </>
+                )}
+                {selectedProduct.status === "Approved" && (
+                  <Button 
+                    variant="outline"
+                    onClick={() => {
+                      handleFlag(selectedProduct.id);
+                    }}
+                  >
+                    <Flag className="h-4 w-4 mr-2" />
+                    Flag Product
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

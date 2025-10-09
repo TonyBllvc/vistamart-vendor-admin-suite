@@ -16,8 +16,25 @@ import {
   Clock,
   CheckCircle,
   XCircle,
-  AlertCircle
+  AlertCircle,
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  CreditCard,
+  Truck,
+  DollarSign
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const orderStats = [
   {
@@ -58,12 +75,25 @@ const orders = [
   {
     id: "ORD-001",
     customer: "John Doe",
+    customerEmail: "john.doe@email.com",
+    customerPhone: "+1 (555) 123-4567",
+    shippingAddress: "123 Main St, Apt 4B, New York, NY 10001",
     vendor: "TechHub Store",
-    items: 3,
+    vendorEmail: "support@techhub.com",
+    items: [
+      { name: "Wireless Mouse", quantity: 1, price: 49.99 },
+      { name: "USB-C Cable", quantity: 2, price: 19.99 },
+      { name: "Laptop Stand", quantity: 1, price: 89.99 }
+    ],
+    subtotal: 179.96,
+    shipping: 20.00,
+    tax: 100.03,
     total: 299.99,
     status: "completed",
     date: "2024-01-15",
-    paymentMethod: "Credit Card"
+    paymentMethod: "Credit Card",
+    trackingNumber: "TRK123456789",
+    notes: "Deliver to front desk"
   },
   {
     id: "ORD-002",
@@ -164,6 +194,8 @@ const getStatusBadge = (status: string) => {
 const AdminOrders = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   const filteredOrders = orders.filter(order => {
     const matchesSearch = order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -174,6 +206,15 @@ const AdminOrders = () => {
     
     return matchesSearch && matchesStatus;
   });
+
+  const handleViewDetails = (order: any) => {
+    setSelectedOrder(order);
+    setIsDetailsOpen(true);
+  };
+
+  const handleUpdateStatus = (orderId: string, newStatus: string) => {
+    console.log('Updating order status:', orderId, newStatus);
+  };
 
   return (
     <div className="space-y-8">
@@ -285,13 +326,17 @@ const AdminOrders = () => {
                   <TableCell className="font-medium">{order.id}</TableCell>
                   <TableCell>{order.customer}</TableCell>
                   <TableCell>{order.vendor}</TableCell>
-                  <TableCell>{order.items} items</TableCell>
+                  <TableCell>{Array.isArray(order.items) ? order.items.length : order.items} items</TableCell>
                   <TableCell>${order.total}</TableCell>
                   <TableCell>{getStatusBadge(order.status)}</TableCell>
                   <TableCell>{new Date(order.date).toLocaleDateString()}</TableCell>
                   <TableCell>{order.paymentMethod}</TableCell>
                   <TableCell>
-                    <Button variant="ghost" size="sm">
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => handleViewDetails(order)}
+                    >
                       <Eye className="h-4 w-4" />
                     </Button>
                   </TableCell>
@@ -308,6 +353,251 @@ const AdminOrders = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Order Details Dialog */}
+      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh]">
+          <DialogHeader>
+            <DialogTitle>Order Details</DialogTitle>
+            <DialogDescription>
+              Complete information about this order
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedOrder && (
+            <ScrollArea className="h-[70vh] pr-4">
+              <div className="space-y-6">
+                {/* Order Header */}
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="text-2xl font-bold">{selectedOrder.id}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Placed on {new Date(selectedOrder.date).toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    {getStatusBadge(selectedOrder.status)}
+                    <p className="text-2xl font-bold mt-2">${selectedOrder.total}</p>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* Customer & Vendor Info */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-base flex items-center gap-2">
+                        <User className="h-4 w-4" />
+                        Customer Information
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3 text-sm">
+                      <div>
+                        <p className="text-muted-foreground text-xs">Name</p>
+                        <p className="font-medium">{selectedOrder.customer}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Mail className="h-3 w-3 text-muted-foreground" />
+                        <p>{selectedOrder.customerEmail}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Phone className="h-3 w-3 text-muted-foreground" />
+                        <p>{selectedOrder.customerPhone}</p>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <MapPin className="h-3 w-3 text-muted-foreground mt-1" />
+                        <p>{selectedOrder.shippingAddress}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-base flex items-center gap-2">
+                        <Package className="h-4 w-4" />
+                        Vendor Information
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3 text-sm">
+                      <div>
+                        <p className="text-muted-foreground text-xs">Store Name</p>
+                        <p className="font-medium">{selectedOrder.vendor}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Mail className="h-3 w-3 text-muted-foreground" />
+                        <p>{selectedOrder.vendorEmail}</p>
+                      </div>
+                      {selectedOrder.trackingNumber && (
+                        <div className="flex items-center gap-2">
+                          <Truck className="h-3 w-3 text-muted-foreground" />
+                          <div>
+                            <p className="text-muted-foreground text-xs">Tracking Number</p>
+                            <p className="font-mono">{selectedOrder.trackingNumber}</p>
+                          </div>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Order Items */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base">Order Items</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Item</TableHead>
+                          <TableHead className="text-center">Quantity</TableHead>
+                          <TableHead className="text-right">Price</TableHead>
+                          <TableHead className="text-right">Total</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {selectedOrder.items?.map((item: any, index: number) => (
+                          <TableRow key={index}>
+                            <TableCell className="font-medium">{item.name}</TableCell>
+                            <TableCell className="text-center">{item.quantity}</TableCell>
+                            <TableCell className="text-right">${item.price}</TableCell>
+                            <TableCell className="text-right font-medium">
+                              ${(item.quantity * item.price).toFixed(2)}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+
+                    <Separator className="my-4" />
+
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Subtotal</span>
+                        <span>${selectedOrder.subtotal?.toFixed(2) || '0.00'}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Shipping</span>
+                        <span>${selectedOrder.shipping?.toFixed(2) || '0.00'}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Tax</span>
+                        <span>${selectedOrder.tax?.toFixed(2) || '0.00'}</span>
+                      </div>
+                      <Separator />
+                      <div className="flex justify-between text-lg font-bold">
+                        <span>Total</span>
+                        <span>${selectedOrder.total}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Payment & Notes */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-base flex items-center gap-2">
+                        <CreditCard className="h-4 w-4" />
+                        Payment Method
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="font-medium">{selectedOrder.paymentMethod}</p>
+                    </CardContent>
+                  </Card>
+
+                  {selectedOrder.notes && (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-base">Order Notes</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-muted-foreground">{selectedOrder.notes}</p>
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+
+                {/* Order Management Actions */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base">Order Management</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Update Order Status</label>
+                        <div className="flex gap-2 flex-wrap">
+                          <Button 
+                            variant={selectedOrder.status === 'pending' ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => handleUpdateStatus(selectedOrder.id, 'pending')}
+                          >
+                            <Clock className="h-4 w-4 mr-2" />
+                            Pending
+                          </Button>
+                          <Button 
+                            variant={selectedOrder.status === 'processing' ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => handleUpdateStatus(selectedOrder.id, 'processing')}
+                          >
+                            <Package className="h-4 w-4 mr-2" />
+                            Processing
+                          </Button>
+                          <Button 
+                            variant={selectedOrder.status === 'shipped' ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => handleUpdateStatus(selectedOrder.id, 'shipped')}
+                          >
+                            <Truck className="h-4 w-4 mr-2" />
+                            Shipped
+                          </Button>
+                          <Button 
+                            variant={selectedOrder.status === 'completed' ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => handleUpdateStatus(selectedOrder.id, 'completed')}
+                          >
+                            <CheckCircle className="h-4 w-4 mr-2" />
+                            Completed
+                          </Button>
+                          <Button 
+                            variant={selectedOrder.status === 'cancelled' ? 'destructive' : 'outline'}
+                            size="sm"
+                            onClick={() => handleUpdateStatus(selectedOrder.id, 'cancelled')}
+                          >
+                            <XCircle className="h-4 w-4 mr-2" />
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+
+                      <Separator />
+
+                      <div className="flex gap-2">
+                        <Button variant="outline" className="flex-1">
+                          <Mail className="h-4 w-4 mr-2" />
+                          Email Customer
+                        </Button>
+                        <Button variant="outline" className="flex-1">
+                          <Download className="h-4 w-4 mr-2" />
+                          Download Invoice
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </ScrollArea>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
