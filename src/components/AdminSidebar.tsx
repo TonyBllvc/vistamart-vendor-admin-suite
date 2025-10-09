@@ -33,6 +33,7 @@ const menuItems = [
   { title: "Blog", url: "/admin/blog", icon: FileText },
   { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
   { title: "Wallet", url: "/admin/wallet", icon: Wallet },
+  { title: "User Wallets", url: "/admin/user-wallets", icon: Wallet },
   { title: "Messages", url: "/admin/messages", icon: MessageCircle },
   { title: "Settings", url: "/admin/settings", icon: Settings },
 ];

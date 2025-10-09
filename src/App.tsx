@@ -13,6 +13,7 @@ import BrandManagement from "./pages/admin/BrandManagement";
 import CategoryManagement from "./pages/admin/CategoryManagement";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminWallet from "./pages/admin/AdminWallet";
+import AdminUserWallets from "./pages/admin/AdminUserWallets";
 import AdminMessages from "./pages/admin/AdminMessages";
 import AdminProductManagement from "./pages/admin/AdminProductManagement";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
@@ -63,6 +64,7 @@ const App = () => (
             <Route path="blog/edit/:id" element={<BlogUpload />} />
             <Route path="analytics" element={<AdminAnalytics />} />
             <Route path="wallet" element={<AdminWallet />} />
+            <Route path="user-wallets" element={<AdminUserWallets />} />
             <Route path="messages" element={<AdminMessages />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
