@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -33,17 +34,10 @@ import {
 import { Switch } from "@/components/ui/switch";
 
 const CategoryManagement = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any>(null);
-  const [newCategory, setNewCategory] = useState({
-    name: "",
-    description: "",
-    icon: "",
-    parentCategory: "",
-    active: true
-  });
 
   const categories = [
     { 
@@ -132,12 +126,6 @@ const CategoryManagement = () => {
     category.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleAddCategory = () => {
-    // Handle adding new category
-    console.log("Adding new category:", newCategory);
-    setIsAddDialogOpen(false);
-    setNewCategory({ name: "", description: "", icon: "", parentCategory: "", active: true });
-  };
 
   const handleToggleCategory = (categoryId: number) => {
     console.log("Toggling category status:", categoryId);
@@ -232,81 +220,13 @@ const CategoryManagement = () => {
               </CardTitle>
               <CardDescription>Manage product categories and their organization</CardDescription>
             </div>
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-primary hover:bg-primary/90">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Category
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[525px]">
-                <DialogHeader>
-                  <DialogTitle>Add New Category</DialogTitle>
-                  <DialogDescription>
-                    Create a new category that vendors can use to organize their products.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid gap-2">
-                    <label htmlFor="category-name" className="text-sm font-medium">Category Name</label>
-                    <Input
-                      id="category-name"
-                      placeholder="Enter category name"
-                      value={newCategory.name}
-                      onChange={(e) => setNewCategory({...newCategory, name: e.target.value})}
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <label htmlFor="category-description" className="text-sm font-medium">Description</label>
-                    <Textarea
-                      id="category-description"
-                      placeholder="Enter category description"
-                      value={newCategory.description}
-                      onChange={(e) => setNewCategory({...newCategory, description: e.target.value})}
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <label htmlFor="category-icon" className="text-sm font-medium">Icon (Emoji)</label>
-                    <Input
-                      id="category-icon"
-                      placeholder="📱"
-                      value={newCategory.icon}
-                      onChange={(e) => setNewCategory({...newCategory, icon: e.target.value})}
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <label htmlFor="parent-category" className="text-sm font-medium">Parent Category (Optional)</label>
-                    <select
-                      id="parent-category"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                      value={newCategory.parentCategory}
-                      onChange={(e) => setNewCategory({...newCategory, parentCategory: e.target.value})}
-                    >
-                      <option value="">No parent (Main category)</option>
-                      {parentCategories.map((category) => (
-                        <option key={category.id} value={category.name}>{category.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      id="category-active"
-                      checked={newCategory.active}
-                      onCheckedChange={(checked) => setNewCategory({...newCategory, active: checked})}
-                    />
-                    <label htmlFor="category-active" className="text-sm font-medium">Active Category</label>
-                  </div>
-                </div>
-                <div className="flex justify-end gap-2">
-                  <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button onClick={handleAddCategory}>
-                    Add Category
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <Button 
+              className="bg-primary hover:bg-primary/90"
+              onClick={() => navigate("/admin/categories/add")}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Category
+            </Button>
 
             <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
               <DialogContent className="sm:max-w-[525px]">

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -35,17 +36,10 @@ import {
 import { Switch } from "@/components/ui/switch";
 
 const BrandManagement = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingBrand, setEditingBrand] = useState<any>(null);
-  const [newBrand, setNewBrand] = useState({
-    name: "",
-    description: "",
-    website: "",
-    category: "",
-    verified: false
-  });
 
   const brands = [
     { 
@@ -112,12 +106,6 @@ const BrandManagement = () => {
     brand.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleAddBrand = () => {
-    // Handle adding new brand
-    console.log("Adding new brand:", newBrand);
-    setIsAddDialogOpen(false);
-    setNewBrand({ name: "", description: "", website: "", category: "", verified: false });
-  };
 
   const handleVerifyBrand = (brandId: number) => {
     console.log("Verifying brand:", brandId);
@@ -212,81 +200,13 @@ const BrandManagement = () => {
               </CardTitle>
               <CardDescription>Manage all registered brands and their verification status</CardDescription>
             </div>
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-primary hover:bg-primary/90">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Brand
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[525px]">
-                <DialogHeader>
-                  <DialogTitle>Add New Brand</DialogTitle>
-                  <DialogDescription>
-                    Create a new brand that vendors can use for their products.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid gap-2">
-                    <label htmlFor="brand-name" className="text-sm font-medium">Brand Name</label>
-                    <Input
-                      id="brand-name"
-                      placeholder="Enter brand name"
-                      value={newBrand.name}
-                      onChange={(e) => setNewBrand({...newBrand, name: e.target.value})}
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <label htmlFor="brand-description" className="text-sm font-medium">Description</label>
-                    <Textarea
-                      id="brand-description"
-                      placeholder="Enter brand description"
-                      value={newBrand.description}
-                      onChange={(e) => setNewBrand({...newBrand, description: e.target.value})}
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <label htmlFor="brand-website" className="text-sm font-medium">Website URL</label>
-                    <Input
-                      id="brand-website"
-                      placeholder="https://example.com"
-                      value={newBrand.website}
-                      onChange={(e) => setNewBrand({...newBrand, website: e.target.value})}
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <label htmlFor="brand-category" className="text-sm font-medium">Primary Category</label>
-                    <select
-                      id="brand-category"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                      value={newBrand.category}
-                      onChange={(e) => setNewBrand({...newBrand, category: e.target.value})}
-                    >
-                      <option value="">Select a category</option>
-                      {categories.map((category) => (
-                        <option key={category} value={category}>{category}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      id="brand-verified"
-                      checked={newBrand.verified}
-                      onCheckedChange={(checked) => setNewBrand({...newBrand, verified: checked})}
-                    />
-                    <label htmlFor="brand-verified" className="text-sm font-medium">Verified Brand</label>
-                  </div>
-                </div>
-                <div className="flex justify-end gap-2">
-                  <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button onClick={handleAddBrand}>
-                    Add Brand
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <Button 
+              className="bg-primary hover:bg-primary/90"
+              onClick={() => navigate("/admin/brands/add")}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Brand
+            </Button>
 
             <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
               <DialogContent className="sm:max-w-[525px]">
