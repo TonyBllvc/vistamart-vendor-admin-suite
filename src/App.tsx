@@ -13,6 +13,8 @@ import BrandManagement from "./pages/admin/BrandManagement";
 import AddBrand from "./pages/admin/AddBrand";
 import CategoryManagement from "./pages/admin/CategoryManagement";
 import AddCategory from "./pages/admin/AddCategory";
+import AddMainCategory from "./pages/admin/AddMainCategory";
+import AddSubcategory from "./pages/admin/AddSubcategory";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminWallet from "./pages/admin/AdminWallet";
 import AdminUserWallets from "./pages/admin/AdminUserWallets";
@@ -61,6 +63,8 @@ const App = () => (
             <Route path="brands/add" element={<AddBrand />} />
             <Route path="categories" element={<CategoryManagement />} />
             <Route path="categories/add" element={<AddCategory />} />
+            <Route path="categories/add-main" element={<AddMainCategory />} />
+            <Route path="categories/add-sub" element={<AddSubcategory />} />
             <Route path="products" element={<AdminProductManagement />} />
             <Route path="orders" element={<AdminOrders />} />
             <Route path="blog" element={<BlogManagement />} />

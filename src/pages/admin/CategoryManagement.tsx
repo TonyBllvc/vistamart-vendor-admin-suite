@@ -220,13 +220,22 @@ const CategoryManagement = () => {
               </CardTitle>
               <CardDescription>Manage product categories and their organization</CardDescription>
             </div>
-            <Button 
-              className="bg-primary hover:bg-primary/90"
-              onClick={() => navigate("/admin/categories/add")}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Category
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline"
+                onClick={() => navigate("/admin/categories/add-sub")}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Subcategory
+              </Button>
+              <Button 
+                className="bg-primary hover:bg-primary/90"
+                onClick={() => navigate("/admin/categories/add-main")}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Main Category
+              </Button>
+            </div>
 
             <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
               <DialogContent className="sm:max-w-[525px]">
