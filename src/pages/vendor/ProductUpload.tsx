@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +14,18 @@ import {
   Eye
 } from "lucide-react";
 
+interface Specification {
+  id: string;
+  name: string;
+  value: string;
+}
+
 const ProductUpload = () => {
+  const [specifications, setSpecifications] = useState<Specification[]>([
+    { id: "1", name: "", value: "" },
+    { id: "2", name: "", value: "" }
+  ]);
+
   const categories = [
     "Electronics", "Fashion", "Home & Garden", "Sports", "Beauty", "Books", "Toys"
   ];
@@ -21,6 +33,22 @@ const ProductUpload = () => {
   const brands = [
     "Apple", "Samsung", "Nike", "Adidas", "Sony", "Microsoft", "Dell"
   ];
+
+  const addSpecification = () => {
+    setSpecifications([...specifications, { id: Date.now().toString(), name: "", value: "" }]);
+  };
+
+  const removeSpecification = (id: string) => {
+    if (specifications.length > 1) {
+      setSpecifications(specifications.filter(spec => spec.id !== id));
+    }
+  };
+
+  const updateSpecification = (id: string, field: 'name' | 'value', value: string) => {
+    setSpecifications(specifications.map(spec => 
+      spec.id === id ? { ...spec, [field]: value } : spec
+    ));
+  };
 
   return (
     <div className="space-y-6">
@@ -139,22 +167,31 @@ const ProductUpload = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <Input placeholder="Specification name" className="flex-1" />
-                  <Input placeholder="Value" className="flex-1" />
-                  <Button variant="ghost" size="sm">
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Input placeholder="Specification name" className="flex-1" />
-                  <Input placeholder="Value" className="flex-1" />
-                  <Button variant="ghost" size="sm">
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
+                {specifications.map((spec) => (
+                  <div key={spec.id} className="flex items-center gap-2">
+                    <Input 
+                      placeholder="Specification name" 
+                      className="flex-1"
+                      value={spec.name}
+                      onChange={(e) => updateSpecification(spec.id, 'name', e.target.value)}
+                    />
+                    <Input 
+                      placeholder="Value" 
+                      className="flex-1"
+                      value={spec.value}
+                      onChange={(e) => updateSpecification(spec.id, 'value', e.target.value)}
+                    />
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => removeSpecification(spec.id)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
               </div>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full" onClick={addSpecification}>
                 <Plus className="h-4 w-4 mr-2" />
                 Add Specification
               </Button>
