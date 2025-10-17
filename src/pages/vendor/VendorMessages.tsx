@@ -22,35 +22,16 @@ const VendorMessages = () => {
   const [selectedChat, setSelectedChat] = useState("admin-1");
   const [message, setMessage] = useState("");
 
+  // Vendors can only chat with Admin (Customer Care)
   const conversations = [
     {
       id: "admin-1",
       type: "admin",
-      name: "VistaMart Admin",
+      name: "Customer Care - VistaMart",
       lastMessage: "Your product listing has been approved",
       time: "2 min ago",
       unread: 1,
       status: "important",
-      avatar: "/placeholder.svg"
-    },
-    {
-      id: "customer-1",
-      type: "customer",
-      name: "Sarah Johnson",
-      lastMessage: "When will my order be shipped?",
-      time: "15 min ago",
-      unread: 2,
-      status: "urgent",
-      avatar: "/placeholder.svg"
-    },
-    {
-      id: "customer-2",
-      type: "customer",
-      name: "Mike Chen",
-      lastMessage: "I love the product quality!",
-      time: "1 hour ago",
-      unread: 0,
-      status: "normal",
       avatar: "/placeholder.svg"
     },
     {
@@ -64,12 +45,12 @@ const VendorMessages = () => {
       avatar: "/placeholder.svg"
     },
     {
-      id: "customer-3",
-      type: "customer",
-      name: "Emily Davis",
-      lastMessage: "Can you provide more details about this product?",
-      time: "3 hours ago",
-      unread: 1,
+      id: "admin-3",
+      type: "admin",
+      name: "Product Review Team",
+      lastMessage: "Please update your product images",
+      time: "1 day ago",
+      unread: 0,
       status: "normal",
       avatar: "/placeholder.svg"
     }
@@ -78,7 +59,7 @@ const VendorMessages = () => {
   const messages = [
     {
       id: "1",
-      sender: "VistaMart Admin",
+      sender: "Customer Care",
       content: "Hello! I wanted to personally inform you that your iPhone 15 Pro Max listing has been approved and is now live on the marketplace.",
       time: "10:30 AM",
       isVendor: false
@@ -92,7 +73,7 @@ const VendorMessages = () => {
     },
     {
       id: "3",
-      sender: "VistaMart Admin",
+      sender: "Customer Care",
       content: "No problem at all! The delay was due to some technical specifications that needed verification. For future listings, please ensure you include all required technical details to speed up the approval process.",
       time: "10:35 AM",
       isVendor: false
@@ -106,7 +87,7 @@ const VendorMessages = () => {
     },
     {
       id: "5",
-      sender: "VistaMart Admin",
+      sender: "Customer Care",
       content: "Yes! I'll send you our product listing guidelines document. It includes a comprehensive checklist that will help ensure faster approvals.",
       time: "10:39 AM",
       isVendor: false
@@ -140,7 +121,7 @@ const VendorMessages = () => {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Messages</h1>
-          <p className="text-muted-foreground">Communicate with admin and customers</p>
+          <p className="text-muted-foreground">Contact customer care for support</p>
         </div>
         <div className="flex gap-3">
           <Button variant="outline">
@@ -230,10 +211,10 @@ const VendorMessages = () => {
                       <AvatarFallback>VA</AvatarFallback>
                     </Avatar>
                     <div>
-                      <h3 className="font-semibold text-foreground">VistaMart Admin</h3>
+                      <h3 className="font-semibold text-foreground">Customer Care - VistaMart</h3>
                       <div className="flex items-center gap-2">
                         <Shield className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-xs text-muted-foreground">Admin</span>
+                        <span className="text-xs text-muted-foreground">Customer Support</span>
                         <div className="w-2 h-2 bg-secondary rounded-full" />
                         <span className="text-xs text-muted-foreground">Important</span>
                       </div>

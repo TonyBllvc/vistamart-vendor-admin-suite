@@ -40,7 +40,9 @@ import UserWishlist from "./pages/user/UserWishlist";
 import UserTransactions from "./pages/user/UserTransactions";
 import UserWallet from "./pages/user/UserWallet";
 import UserProfile from "./pages/user/UserProfile";
+import UserMessages from "./pages/user/UserMessages";
 import AffiliateEarnings from "./pages/affiliate/AffiliateEarnings";
+import AffiliateMessages from "./pages/affiliate/AffiliateMessages";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -97,6 +99,7 @@ const App = () => (
             <Route path="wishlist" element={<UserWishlist />} />
             <Route path="transactions" element={<UserTransactions />} />
             <Route path="wallet" element={<UserWallet />} />
+            <Route path="messages" element={<UserMessages />} />
             <Route path="profile" element={<UserProfile />} />
           </Route>
           
@@ -110,6 +113,7 @@ const App = () => (
             <Route path="transactions" element={<UserTransactions />} />
             <Route path="wallet" element={<UserWallet />} />
             <Route path="earnings" element={<AffiliateEarnings />} />
+            <Route path="messages" element={<AffiliateMessages />} />
             <Route path="profile" element={<UserProfile />} />
           </Route>
           

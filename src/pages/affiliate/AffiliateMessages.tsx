@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   MessageCircle, 
   Search, 
@@ -14,181 +13,88 @@ import {
   Star,
   Archive,
   Clock,
-  Users,
-  User,
-  Store,
-  DollarSign,
-  Shield
+  Shield,
+  DollarSign
 } from "lucide-react";
 
-const AdminMessages = () => {
-  const [selectedChat, setSelectedChat] = useState("vendor-1");
+const AffiliateMessages = () => {
+  const [selectedChat, setSelectedChat] = useState("admin-1");
   const [message, setMessage] = useState("");
-  const [activeTab, setActiveTab] = useState("vendors");
 
-  const vendorConversations = [
-    {
-      id: "vendor-1",
-      type: "vendor",
-      name: "TechStore Pro",
-      lastMessage: "I need help with my product listing approval",
-      time: "2 min ago",
-      unread: 3,
-      status: "high",
-      avatar: "/placeholder.svg"
-    },
-    {
-      id: "vendor-2",
-      type: "vendor",
-      name: "Fashion Hub",
-      lastMessage: "Can you help me with the commission rates?",
-      time: "15 min ago",
-      unread: 1,
-      status: "medium",
-      avatar: "/placeholder.svg"
-    },
-    {
-      id: "vendor-3",
-      type: "vendor",
-      name: "Electronics World",
-      lastMessage: "Thank you for resolving the issue!",
-      time: "2 hours ago",
-      unread: 0,
-      status: "resolved",
-      avatar: "/placeholder.svg"
-    }
-  ];
-
-  const userConversations = [
-    {
-      id: "user-1",
-      type: "user",
-      name: "Sarah Johnson",
-      lastMessage: "I have an issue with my recent order",
-      time: "5 min ago",
-      unread: 2,
-      status: "high",
-      avatar: "/placeholder.svg"
-    },
-    {
-      id: "user-2",
-      type: "user",
-      name: "Mike Chen",
-      lastMessage: "When will my refund be processed?",
-      time: "30 min ago",
-      unread: 1,
-      status: "medium",
-      avatar: "/placeholder.svg"
-    },
-    {
-      id: "user-3",
-      type: "user",
-      name: "Emily Davis",
-      lastMessage: "Great service! Thank you",
-      time: "1 hour ago",
-      unread: 0,
-      status: "resolved",
-      avatar: "/placeholder.svg"
-    }
-  ];
-
-  const affiliateConversations = [
-    {
-      id: "affiliate-1",
-      type: "affiliate",
-      name: "Marketing Pro",
-      lastMessage: "Question about commission structure",
-      time: "20 min ago",
-      unread: 1,
-      status: "medium",
-      avatar: "/placeholder.svg"
-    },
-    {
-      id: "affiliate-2",
-      type: "affiliate",
-      name: "Digital Promoter",
-      lastMessage: "Need new promotional materials",
-      time: "1 hour ago",
-      unread: 0,
-      status: "low",
-      avatar: "/placeholder.svg"
-    }
-  ];
-
-  const managementConversations = [
+  // Affiliates can only chat with Admin (Customer Care)
+  const conversations = [
     {
       id: "admin-1",
       type: "admin",
-      name: "Admin Team Discussion",
-      lastMessage: "Monthly review meeting scheduled",
+      name: "Affiliate Support - VistaMart",
+      lastMessage: "Your commission has been approved",
       time: "10 min ago",
-      unread: 5,
-      status: "high",
+      unread: 1,
+      status: "important",
       avatar: "/placeholder.svg"
     },
     {
       id: "admin-2",
       type: "admin",
-      name: "Operations Team",
-      lastMessage: "New policy update needed",
+      name: "Partnership Team",
+      lastMessage: "New promotional materials available",
       time: "2 hours ago",
       unread: 0,
-      status: "medium",
+      status: "info",
+      avatar: "/placeholder.svg"
+    },
+    {
+      id: "admin-3",
+      type: "admin",
+      name: "Payment Support",
+      lastMessage: "Your payout is being processed",
+      time: "1 day ago",
+      unread: 0,
+      status: "normal",
       avatar: "/placeholder.svg"
     }
   ];
 
-  const getConversations = () => {
-    switch (activeTab) {
-      case "vendors": return vendorConversations;
-      case "users": return userConversations;
-      case "affiliates": return affiliateConversations;
-      case "management": return managementConversations;
-      default: return vendorConversations;
-    }
-  };
-
   const messages = [
     {
       id: "1",
-      sender: "TechStore Pro",
-      content: "Hello admin, I need help with my product listing approval. My latest iPhone listing has been pending for 3 days now.",
-      time: "10:30 AM",
-      isAdmin: false
+      sender: "Affiliate Support",
+      content: "Hello! I'm excited to inform you that your affiliate commission for this month has been approved and will be processed shortly.",
+      time: "11:20 AM",
+      isAffiliate: false
     },
     {
       id: "2",
-      sender: "Admin",
-      content: "Hi there! I understand your concern. Let me check the status of your iPhone listing. Can you provide me with the product ID?",
-      time: "10:32 AM",
-      isAdmin: true
+      sender: "You",
+      content: "That's great news! Can you tell me when I can expect the payment?",
+      time: "11:22 AM",
+      isAffiliate: true
     },
     {
       id: "3",
-      sender: "TechStore Pro",
-      content: "Sure! The product ID is TECH-IPH15-001. It's the iPhone 15 Pro Max listing I submitted on Monday.",
-      time: "10:33 AM",
-      isAdmin: false
+      sender: "Affiliate Support",
+      content: "Your payment will be processed within 3-5 business days. You'll receive an email notification once it's completed.",
+      time: "11:24 AM",
+      isAffiliate: false
     },
     {
       id: "4",
-      sender: "Admin",
-      content: "I found the listing. The delay was due to some missing technical specifications in the product description. I've approved it now and it should be live within the next hour. Please ensure all required fields are filled for future listings.",
-      time: "10:35 AM",
-      isAdmin: true
+      sender: "You",
+      content: "Perfect! Also, I noticed some new marketing materials in the dashboard. Are there any usage guidelines?",
+      time: "11:26 AM",
+      isAffiliate: true
     },
     {
       id: "5",
-      sender: "TechStore Pro",
-      content: "That's great! Thank you so much for the quick resolution. I'll make sure to double-check all specifications for future listings.",
-      time: "10:37 AM",
-      isAdmin: false
+      sender: "Affiliate Support",
+      content: "Yes! We've uploaded comprehensive guidelines along with the materials. You're free to use them across all your channels. If you need custom designs, just let us know!",
+      time: "11:28 AM",
+      isAffiliate: false
     }
   ];
 
   const handleSendMessage = () => {
     if (message.trim()) {
-      // Handle message sending logic here
       console.log("Sending message:", message);
       setMessage("");
     }
@@ -196,21 +102,11 @@ const AdminMessages = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "high": return "bg-red-500";
-      case "medium": return "bg-yellow-500";
-      case "low": return "bg-blue-500";
-      case "resolved": return "bg-green-500";
+      case "urgent": return "bg-red-500";
+      case "important": return "bg-accent";
+      case "info": return "bg-blue-500";
+      case "normal": return "bg-green-500";
       default: return "bg-gray-500";
-    }
-  };
-
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case "vendor": return <Store className="h-4 w-4" />;
-      case "user": return <User className="h-4 w-4" />;
-      case "affiliate": return <DollarSign className="h-4 w-4" />;
-      case "admin": return <Shield className="h-4 w-4" />;
-      default: return <MessageCircle className="h-4 w-4" />;
     }
   };
 
@@ -219,7 +115,7 @@ const AdminMessages = () => {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Messages</h1>
-          <p className="text-muted-foreground">Manage all customer care and internal communications</p>
+          <p className="text-muted-foreground">Contact affiliate support team</p>
         </div>
         <div className="flex gap-3">
           <Button variant="outline">
@@ -228,53 +124,33 @@ const AdminMessages = () => {
           </Button>
           <Button>
             <Star className="h-4 w-4 mr-2" />
-            Priority
+            Important
           </Button>
         </div>
       </div>
 
       <div className="flex flex-1 gap-6 min-h-0">
         {/* Conversations List */}
-        <Card className="w-96 flex flex-col">
+        <Card className="w-80 flex flex-col">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
-              <MessageCircle className="h-5 w-5 text-primary" />
-              <CardTitle className="text-lg">Conversations</CardTitle>
+              <DollarSign className="h-5 w-5 text-accent" />
+              <CardTitle className="text-lg">Affiliate Support</CardTitle>
             </div>
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="vendors" className="text-xs">
-                  <Store className="h-3 w-3 mr-1" />
-                  Vendors
-                </TabsTrigger>
-                <TabsTrigger value="users" className="text-xs">
-                  <User className="h-3 w-3 mr-1" />
-                  Users
-                </TabsTrigger>
-                <TabsTrigger value="affiliates" className="text-xs">
-                  <DollarSign className="h-3 w-3 mr-1" />
-                  Affiliates
-                </TabsTrigger>
-                <TabsTrigger value="management" className="text-xs">
-                  <Shield className="h-3 w-3 mr-1" />
-                  Team
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-            <div className="relative mt-2">
+            <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input placeholder="Search conversations..." className="pl-10" />
             </div>
           </CardHeader>
           <CardContent className="flex-1 overflow-y-auto">
             <div className="space-y-2">
-              {getConversations().map((conversation) => (
+              {conversations.map((conversation) => (
                 <div
                   key={conversation.id}
                   onClick={() => setSelectedChat(conversation.id)}
                   className={`p-3 rounded-lg cursor-pointer transition-colors ${
                     selectedChat === conversation.id 
-                      ? "bg-primary/10 border border-primary/20" 
+                      ? "bg-accent/10 border border-accent/20" 
                       : "hover:bg-muted/50"
                   }`}
                 >
@@ -282,13 +158,13 @@ const AdminMessages = () => {
                     <Avatar className="h-10 w-10">
                       <AvatarImage src={conversation.avatar} />
                       <AvatarFallback>
-                        {conversation.name.split(' ').map(n => n[0]).join('')}
+                        <DollarSign className="h-5 w-5" />
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          {getTypeIcon(conversation.type)}
+                          <Shield className="h-4 w-4 text-accent" />
                           <h4 className="font-medium text-sm text-foreground truncate">
                             {conversation.name}
                           </h4>
@@ -326,15 +202,17 @@ const AdminMessages = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">
-                      <AvatarFallback>TP</AvatarFallback>
+                      <AvatarFallback>
+                        <DollarSign className="h-5 w-5" />
+                      </AvatarFallback>
                     </Avatar>
                     <div>
-                      <h3 className="font-semibold text-foreground">TechStore Pro</h3>
+                      <h3 className="font-semibold text-foreground">Affiliate Support - VistaMart</h3>
                       <div className="flex items-center gap-2">
-                        <Users className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-xs text-muted-foreground">Vendor</span>
-                        <div className="w-2 h-2 bg-red-500 rounded-full" />
-                        <span className="text-xs text-muted-foreground">High Priority</span>
+                        <Shield className="h-3 w-3 text-muted-foreground" />
+                        <span className="text-xs text-muted-foreground">Partnership Team</span>
+                        <div className="w-2 h-2 bg-green-500 rounded-full" />
+                        <span className="text-xs text-muted-foreground">Available</span>
                       </div>
                     </div>
                   </div>
@@ -348,15 +226,15 @@ const AdminMessages = () => {
               <CardContent className="flex-1 overflow-y-auto p-4">
                 <div className="space-y-4">
                   {messages.map((msg) => (
-                    <div key={msg.id} className={`flex ${msg.isAdmin ? "justify-end" : "justify-start"}`}>
+                    <div key={msg.id} className={`flex ${msg.isAffiliate ? "justify-end" : "justify-start"}`}>
                       <div className={`max-w-[70%] p-3 rounded-lg ${
-                        msg.isAdmin 
-                          ? "bg-primary text-primary-foreground" 
+                        msg.isAffiliate 
+                          ? "bg-accent text-accent-foreground" 
                           : "bg-muted text-foreground"
                       }`}>
                         <p className="text-sm">{msg.content}</p>
                         <p className={`text-xs mt-1 ${
-                          msg.isAdmin ? "text-primary-foreground/70" : "text-muted-foreground"
+                          msg.isAffiliate ? "text-accent-foreground/70" : "text-muted-foreground"
                         }`}>
                           {msg.time}
                         </p>
@@ -402,4 +280,4 @@ const AdminMessages = () => {
   );
 };
 
-export default AdminMessages;
+export default AffiliateMessages;

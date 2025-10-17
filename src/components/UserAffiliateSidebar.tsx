@@ -14,7 +14,8 @@ import {
   Gift,
   TrendingUp,
   Wallet,
-  CreditCard
+  CreditCard,
+  MessageCircle
 } from "lucide-react";
 import {
   Sidebar,
@@ -37,6 +38,7 @@ const userItems = [
   { title: "Wishlist", url: "/user/wishlist", icon: Heart },
   { title: "Transaction History", url: "/user/transactions", icon: Receipt },
   { title: "Wallet", url: "/user/wallet", icon: Wallet },
+  { title: "Messages", url: "/user/messages", icon: MessageCircle },
   { title: "Profile", url: "/user/profile", icon: User },
 ];
 
@@ -53,6 +55,7 @@ const affiliateItems = [
   { title: "Performance", url: "/affiliate/performance", icon: TrendingUp },
   { title: "Marketing Tools", url: "/affiliate/marketing", icon: Gift },
   { title: "Reports", url: "/affiliate/reports", icon: FileText },
+  { title: "Messages", url: "/affiliate/messages", icon: MessageCircle },
   { title: "Profile", url: "/affiliate/profile", icon: User },
 ];
 
