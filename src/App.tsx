@@ -38,9 +38,11 @@ import UserOrders from "./pages/user/UserOrders";
 import UserOrderDetails from "./pages/user/UserOrderDetails";
 import UserWishlist from "./pages/user/UserWishlist";
 import UserTransactions from "./pages/user/UserTransactions";
+import UserTransactionDetails from "./pages/user/UserTransactionDetails";
 import UserWallet from "./pages/user/UserWallet";
 import UserProfile from "./pages/user/UserProfile";
 import UserMessages from "./pages/user/UserMessages";
+import VendorTransactionDetails from "./pages/vendor/VendorTransactionDetails";
 import AffiliateEarnings from "./pages/affiliate/AffiliateEarnings";
 import AffiliateMessages from "./pages/affiliate/AffiliateMessages";
 import Index from "./pages/Index";
@@ -86,6 +88,7 @@ const App = () => (
             <Route path="products/manage" element={<ProductManagement />} />
             <Route path="revenue" element={<VendorRevenue />} />
             <Route path="wallet" element={<VendorWallet />} />
+            <Route path="wallet/:transactionId" element={<VendorTransactionDetails />} />
             <Route path="messages" element={<VendorMessages />} />
             <Route path="settings" element={<VendorSettings />} />
           </Route>
@@ -98,6 +101,7 @@ const App = () => (
             <Route path="orders/:orderId" element={<UserOrderDetails />} />
             <Route path="wishlist" element={<UserWishlist />} />
             <Route path="transactions" element={<UserTransactions />} />
+            <Route path="transactions/:transactionId" element={<UserTransactionDetails />} />
             <Route path="wallet" element={<UserWallet />} />
             <Route path="messages" element={<UserMessages />} />
             <Route path="profile" element={<UserProfile />} />
@@ -111,6 +115,7 @@ const App = () => (
             <Route path="orders/:orderId" element={<UserOrderDetails />} />
             <Route path="wishlist" element={<UserWishlist />} />
             <Route path="transactions" element={<UserTransactions />} />
+            <Route path="transactions/:transactionId" element={<UserTransactionDetails />} />
             <Route path="wallet" element={<UserWallet />} />
             <Route path="earnings" element={<AffiliateEarnings />} />
             <Route path="messages" element={<AffiliateMessages />} />
