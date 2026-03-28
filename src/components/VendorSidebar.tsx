@@ -8,7 +8,8 @@ import {
   BarChart3,
   MessageCircle,
   Store,
-  Wallet
+  Wallet,
+  Crown
 } from "lucide-react";
 import {
   Sidebar,
@@ -26,6 +27,7 @@ const menuItems = [
   { title: "Dashboard", url: "/vendor", icon: LayoutDashboard },
   { title: "Upload Product", url: "/vendor/products/upload", icon: Upload },
   { title: "Manage Products", url: "/vendor/products/manage", icon: Package },
+  { title: "Packages", url: "/vendor/packages", icon: Crown },
   { title: "Revenue", url: "/vendor/revenue", icon: DollarSign },
   { title: "Analytics", url: "/vendor/analytics", icon: BarChart3 },
   { title: "Orders", url: "/vendor/orders", icon: Store },

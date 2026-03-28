@@ -24,7 +24,8 @@ import {
   Plus,
   X,
   Upload,
-  Trash2
+  Trash2,
+  Package
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -878,6 +879,118 @@ const AdminSettings = () => {
               </Button>
               <Button variant="outline" className="flex-1">
                 Export to PDF
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Vendor Product Tag Packages */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Package className="h-5 w-5" />
+              Vendor Product Tag Packages
+            </CardTitle>
+            <CardDescription>Create and manage vendor subscription packages that control product listing limits</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Existing Packages Table */}
+            <div className="border rounded-lg overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Package Name</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead>Discount</TableHead>
+                    <TableHead>Duration</TableHead>
+                    <TableHead>Product Limit</TableHead>
+                    <TableHead>Active Vendors</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {[
+                    { id: 1, name: "Starter", price: 9.99, discount: 0, duration: 30, limit: 10, vendors: 124, status: true },
+                    { id: 2, name: "Professional", price: 29.99, discount: 10, duration: 30, limit: 50, vendors: 89, status: true },
+                    { id: 3, name: "Enterprise", price: 79.99, discount: 15, duration: 30, limit: 200, vendors: 34, status: true },
+                    { id: 4, name: "Unlimited", price: 149.99, discount: 20, duration: 30, limit: -1, vendors: 12, status: true },
+                  ].map((pkg) => (
+                    <TableRow key={pkg.id}>
+                      <TableCell className="font-medium">{pkg.name}</TableCell>
+                      <TableCell>${pkg.price.toFixed(2)}</TableCell>
+                      <TableCell>
+                        {pkg.discount > 0 ? (
+                          <Badge variant="outline" className="text-success border-success/30">{pkg.discount}%</Badge>
+                        ) : (
+                          <span className="text-muted-foreground">—</span>
+                        )}
+                      </TableCell>
+                      <TableCell>{pkg.duration} days</TableCell>
+                      <TableCell>
+                        <Badge variant="outline">
+                          {pkg.limit === -1 ? "Unlimited" : pkg.limit}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge>{pkg.vendors}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={pkg.status ? "bg-success text-success-foreground" : "bg-muted text-muted-foreground"}>
+                          {pkg.status ? "Active" : "Inactive"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-1">
+                          <Button size="sm" variant="outline">Edit</Button>
+                          <Button size="sm" variant="ghost">
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Add New Package Form */}
+            <div className="border rounded-lg p-4 space-y-4 bg-muted/20">
+              <h4 className="font-semibold flex items-center gap-2">
+                <Plus className="h-4 w-4" />
+                Add New Package
+              </h4>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label>Package Name</Label>
+                  <Input placeholder="e.g. Premium" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Price ($)</Label>
+                  <Input type="number" placeholder="49.99" min="0" step="0.01" />
+                </div>
+              </div>
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="space-y-2">
+                  <Label>Discount (%)</Label>
+                  <Input type="number" placeholder="0" min="0" max="100" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Duration (days)</Label>
+                  <Input type="number" placeholder="30" min="1" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Product Limit (-1 for unlimited)</Label>
+                  <Input type="number" placeholder="50" min="-1" />
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Switch defaultChecked />
+                <Label>Allow product uploads (product_allowed_status)</Label>
+              </div>
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                Create Package
               </Button>
             </div>
           </CardContent>

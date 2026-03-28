@@ -87,6 +87,19 @@ const ProductManagement = () => {
     return { color: 'text-success', message: 'In stock' };
   };
 
+  // Mock active package
+  const activePackage = {
+    name: "Professional",
+    product_limits: 50,
+    products_used: products.length,
+    expires_at: "2026-04-28",
+    status: "active",
+  };
+
+  const usagePercent = activePackage.product_limits === -1 
+    ? 0 
+    : Math.round((activePackage.products_used / activePackage.product_limits) * 100);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
@@ -95,6 +108,49 @@ const ProductManagement = () => {
           Manage all your products, inventory, and listings.
         </p>
       </div>
+
+      {/* Active Package Banner */}
+      <Card className="border-secondary/30 bg-gradient-to-r from-secondary/5 to-accent/10">
+        <CardContent className="py-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center">
+                <Package className="h-5 w-5 text-secondary" />
+              </div>
+              <div>
+                <p className="font-semibold">{activePackage.name} Package</p>
+                <p className="text-sm text-muted-foreground">
+                  {activePackage.product_limits === -1 
+                    ? "Unlimited products" 
+                    : `${activePackage.products_used} / ${activePackage.product_limits} products used`}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              {activePackage.product_limits !== -1 && (
+                <div className="w-40">
+                  <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                    <span>{usagePercent}% used</span>
+                    <span>{activePackage.product_limits - activePackage.products_used} remaining</span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-2">
+                    <div 
+                      className={`h-2 rounded-full transition-all ${
+                        usagePercent >= 90 ? "bg-destructive" : usagePercent >= 70 ? "bg-warning" : "bg-secondary"
+                      }`}
+                      style={{ width: `${usagePercent}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+              <Badge className={`${activePackage.status === "active" ? "bg-success text-success-foreground" : "bg-muted text-muted-foreground"}`}>
+                {activePackage.status}
+              </Badge>
+              <p className="text-xs text-muted-foreground">Expires: {activePackage.expires_at}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Quick Stats */}
       <div className="grid gap-4 md:grid-cols-4">
