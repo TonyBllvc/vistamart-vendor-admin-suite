@@ -22,6 +22,7 @@ import AdminMessages from "./pages/admin/AdminMessages";
 import AdminProductManagement from "./pages/admin/AdminProductManagement";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminOrders from "./pages/admin/AdminOrders";
+import AdminRequests from "./pages/admin/AdminRequests";
 import BlogManagement from "./pages/admin/BlogManagement";
 import BlogUpload from "./pages/admin/BlogUpload";
 import ProductUpload from "./pages/vendor/ProductUpload";
@@ -72,6 +73,7 @@ const App = () => (
             <Route path="categories/add-sub" element={<AddSubcategory />} />
             <Route path="products" element={<AdminProductManagement />} />
             <Route path="orders" element={<AdminOrders />} />
+            <Route path="requests" element={<AdminRequests />} />
             <Route path="blog" element={<BlogManagement />} />
             <Route path="blog/upload" element={<BlogUpload />} />
             <Route path="blog/edit/:id" element={<BlogUpload />} />

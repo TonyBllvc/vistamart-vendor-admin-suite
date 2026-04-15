@@ -10,6 +10,7 @@ import {
   CheckCircle
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { MyRequests } from "@/components/MyRequests";
 
 const VendorDashboard = () => {
   const stats = [
@@ -209,6 +210,9 @@ const VendorDashboard = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* My Requests */}
+      <MyRequests role="vendor" />
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Users, DollarSign, TrendingUp, Eye, ShoppingCart, Package, Heart, Wallet } from "lucide-react";
+import { MyRequests } from "@/components/MyRequests";
 
 const AffiliateDashboard = () => {
   const stats = [
@@ -146,6 +147,9 @@ const AffiliateDashboard = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* My Requests */}
+      <MyRequests role="affiliate" />
     </div>
   );
 };
