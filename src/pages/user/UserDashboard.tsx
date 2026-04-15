@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ShoppingCart, Package, Heart, Wallet, Star, TrendingUp } from "lucide-react";
 import { MyRequests } from "@/components/MyRequests";
-import { ShoppingCart, Package, Heart, Wallet, Star, TrendingUp } from "lucide-react";
 
 const UserDashboard = () => {
   const stats = [
