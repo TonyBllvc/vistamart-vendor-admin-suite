@@ -9,7 +9,8 @@ import {
   ShoppingBag,
   Tag,
   Wallet,
-  FileText
+  FileText,
+  Shield
 } from "lucide-react";
 import {
   Sidebar,
@@ -30,6 +31,7 @@ const menuItems = [
   { title: "Category Management", url: "/admin/categories", icon: Tag },
   { title: "Products", url: "/admin/products", icon: Package },
   { title: "Orders", url: "/admin/orders", icon: ShoppingBag },
+  { title: "Requests & Disputes", url: "/admin/requests", icon: Shield },
   { title: "Blog", url: "/admin/blog", icon: FileText },
   { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
   { title: "Wallet", url: "/admin/wallet", icon: Wallet },
