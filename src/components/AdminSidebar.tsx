@@ -10,7 +10,8 @@ import {
   Tag,
   Wallet,
   FileText,
-  Shield
+  Shield,
+  AlertTriangle,
 } from "lucide-react";
 import {
   Sidebar,
@@ -37,6 +38,7 @@ const menuItems = [
   { title: "Wallet", url: "/admin/wallet", icon: Wallet },
   { title: "User Wallets", url: "/admin/user-wallets", icon: Wallet },
   { title: "Messages", url: "/admin/messages", icon: MessageCircle },
+  { title: "System Logs", url: "/admin/system-logs", icon: AlertTriangle },
   { title: "Settings", url: "/admin/settings", icon: Settings },
 ];
 
