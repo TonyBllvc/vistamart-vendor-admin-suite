@@ -9,6 +9,7 @@ import VendorLayout from "./layouts/VendorLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import VendorDashboard from "./pages/vendor/VendorDashboard";
 import UserManagement from "./pages/admin/UserManagement";
+import AdminAccounts from "./pages/admin/AdminAccounts";
 import BrandManagement from "./pages/admin/BrandManagement";
 import AddBrand from "./pages/admin/AddBrand";
 import CategoryManagement from "./pages/admin/CategoryManagement";
@@ -67,6 +68,7 @@ const App = () => (
           <Route path="/admin" element={<SidebarProvider><AdminLayout /></SidebarProvider>}>
             <Route index element={<AdminDashboard />} />
             <Route path="users" element={<UserManagement />} />
+            <Route path="accounts" element={<AdminAccounts />} />
             <Route path="brands" element={<BrandManagement />} />
             <Route path="brands/add" element={<AddBrand />} />
             <Route path="categories" element={<CategoryManagement />} />
