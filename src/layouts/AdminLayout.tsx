@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/AdminSidebar";
+import { SessionStatusIndicator } from "@/components/admin/SessionStatusIndicator";
 
 const AdminLayout = () => {
   return (
@@ -18,8 +19,11 @@ const AdminLayout = () => {
               <p className="text-sm text-muted-foreground">Manage your marketplace</p>
             </div>
           </div>
+          {/* Session identity slot (State A) */}
+          <div id="admin-session-slot" className="ml-auto" />
         </header>
         <main className="flex-1 p-6">
+          <SessionStatusIndicator />
           <Outlet />
         </main>
       </div>
