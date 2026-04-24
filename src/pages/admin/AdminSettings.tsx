@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,7 +26,9 @@ import {
   X,
   Upload,
   Trash2,
-  Package
+  Package,
+  KeyRound,
+  ChevronRight
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -206,6 +209,26 @@ const AdminSettings = () => {
             <div className="space-y-2">
               <Label htmlFor="sessionTimeout">Session Timeout (minutes)</Label>
               <Input id="sessionTimeout" type="number" defaultValue="60" className="w-32" />
+            </div>
+
+            <div className="border-t border-border pt-6">
+              <Link
+                to="/admin/settings/change-password"
+                className="flex items-center justify-between p-4 rounded-lg border border-border hover:border-primary/40 hover:bg-accent/50 transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center">
+                    <KeyRound className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground">Change Password</p>
+                    <p className="text-sm text-muted-foreground">
+                      Update your admin password with email verification
+                    </p>
+                  </div>
+                </div>
+                <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
+              </Link>
             </div>
           </CardContent>
         </Card>
