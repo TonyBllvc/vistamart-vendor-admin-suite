@@ -101,7 +101,6 @@ const initials = (name: string) =>
     .toUpperCase();
 
 const AdminAccounts = () => {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<RoleKey>("all");
   const [search, setSearch] = useState("");
   const [submittedSearch, setSubmittedSearch] = useState("");
@@ -109,6 +108,13 @@ const AdminAccounts = () => {
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [activeAccount, setActiveAccount] = useState<AccountDetails | null>(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+
+  const openDetails = (row: AccountRow) => {
+    setActiveAccount(row);
+    setDetailsOpen(true);
+  };
 
   // Counts per role
   const counts = useMemo(() => {
@@ -397,7 +403,7 @@ const AdminAccounts = () => {
                           "cursor-pointer",
                           isSelected && "bg-primary/5"
                         )}
-                        onClick={() => navigate(`/admin/accounts/${row.id}`)}
+                        onClick={() => openDetails(row)}
                       >
                         <TableCell onClick={(e) => e.stopPropagation()}>
                           <Checkbox
@@ -453,34 +459,14 @@ const AdminAccounts = () => {
                           className="text-right"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm">
-                                Actions
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem
-                                onClick={() => navigate(`/admin/accounts/${row.id}`)}
-                              >
-                                <Eye className="mr-2 h-4 w-4" /> View
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <Pencil className="mr-2 h-4 w-4" /> Edit
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem>
-                                <ShieldOff className="mr-2 h-4 w-4" /> Suspend
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <LogOut className="mr-2 h-4 w-4" /> Force Logout
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem className="text-destructive focus:text-destructive">
-                                <UserX2 className="mr-2 h-4 w-4" /> Ban Account
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => openDetails(row)}
+                          >
+                            <Eye className="mr-2 h-4 w-4" />
+                            View
+                          </Button>
                         </TableCell>
                       </TableRow>
                     );
