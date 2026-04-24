@@ -16,6 +16,7 @@ import AddCategory from "./pages/admin/AddCategory";
 import AddMainCategory from "./pages/admin/AddMainCategory";
 import AddSubcategory from "./pages/admin/AddSubcategory";
 import AdminSettings from "./pages/admin/AdminSettings";
+import AdminChangePassword from "./pages/admin/AdminChangePassword";
 import AdminWallet from "./pages/admin/AdminWallet";
 import AdminUserWallets from "./pages/admin/AdminUserWallets";
 import AdminMessages from "./pages/admin/AdminMessages";
@@ -84,6 +85,7 @@ const App = () => (
             <Route path="messages" element={<AdminMessages />} />
             <Route path="system-logs" element={<SystemLogs />} />
             <Route path="settings" element={<AdminSettings />} />
+            <Route path="settings/change-password" element={<AdminChangePassword />} />
           </Route>
           
           {/* Vendor Routes */}
