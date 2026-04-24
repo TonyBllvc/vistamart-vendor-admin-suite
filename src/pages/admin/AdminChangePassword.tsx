@@ -334,7 +334,7 @@ const AdminChangePassword = () => {
                   otpExpired
                     ? "bg-destructive/10 text-destructive border-destructive/30"
                     : otpRemaining < 30
-                    ? "bg-orange-500/10 text-orange-600 border-orange-500/30 dark:text-orange-400"
+                    ? "bg-destructive/10 text-destructive border-destructive/30"
                     : "bg-muted text-foreground border-border"
                 )}
               >
