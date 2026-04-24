@@ -489,6 +489,12 @@ const AdminAccounts = () => {
           </Button>
         </div>
       )}
+
+      <AccountDetailsDialog
+        account={activeAccount}
+        open={detailsOpen}
+        onOpenChange={setDetailsOpen}
+      />
     </div>
   );
 };
