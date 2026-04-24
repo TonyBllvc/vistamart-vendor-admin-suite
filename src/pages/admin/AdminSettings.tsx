@@ -230,6 +230,8 @@ const AdminSettings = () => {
                 <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
               </Link>
             </div>
+          </CardContent>
+        </Card>
 
         {/* Notification Settings */}
         <Card>
