@@ -1,9 +1,7 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Search,
   X,
-  UserX2,
   LogOut,
   Pencil,
   Eye,
@@ -28,12 +26,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  AccountDetailsDialog,
+  type AccountDetails,
+} from "@/components/admin/AccountDetailsDialog";
 import { cn } from "@/lib/utils";
 
 type RoleKey = "all" | "admin" | "author" | "vendor" | "affiliate" | "user";
