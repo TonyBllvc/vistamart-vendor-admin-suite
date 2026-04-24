@@ -28,6 +28,7 @@ import {
 const menuItems = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
   { title: "User Management", url: "/admin/users", icon: Users },
+  { title: "Accounts", url: "/admin/accounts", icon: Users },
   { title: "Brand Management", url: "/admin/brands", icon: Package },
   { title: "Category Management", url: "/admin/categories", icon: Tag },
   { title: "Products", url: "/admin/products", icon: Package },
