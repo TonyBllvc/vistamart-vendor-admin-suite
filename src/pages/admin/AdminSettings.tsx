@@ -33,6 +33,46 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Activity, MessageSquare } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
+interface PackageRow {
+  id: number;
+  name: string;
+  price: number;
+  discount: number;
+  duration: number;
+  limit: number;
+  vendors: number;
+  status: boolean;
+}
+
+interface UserLite {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+}
 
 // Mock data for users
 const mockUsers = [
