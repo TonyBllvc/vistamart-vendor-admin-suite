@@ -33,6 +33,46 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Activity, MessageSquare } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
+interface PackageRow {
+  id: number;
+  name: string;
+  price: number;
+  discount: number;
+  duration: number;
+  limit: number;
+  vendors: number;
+  status: boolean;
+}
+
+interface UserLite {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+}
 
 // Mock data for users
 const mockUsers = [
@@ -58,6 +98,54 @@ const AdminSettings = () => {
   ]);
   const [stagedImages, setStagedImages] = useState<File[]>([]);
   const [expandedUserId, setExpandedUserId] = useState<number | null>(null);
+
+  // Action dialog state
+  const { toast } = useToast();
+  const [messageUser, setMessageUser] = useState<UserLite | null>(null);
+  const [messageBody, setMessageBody] = useState("");
+  const [activityUser, setActivityUser] = useState<UserLite | null>(null);
+  const [suspendUser, setSuspendUser] = useState<UserLite | null>(null);
+
+  const [editPackage, setEditPackage] = useState<PackageRow | null>(null);
+  const [deletePackage, setDeletePackage] = useState<PackageRow | null>(null);
+
+  const sendMessage = () => {
+    if (!messageUser) return;
+    toast({
+      title: "Message sent",
+      description: `Delivered to ${messageUser.name}.`,
+    });
+    setMessageBody("");
+    setMessageUser(null);
+  };
+
+  const confirmSuspend = () => {
+    if (!suspendUser) return;
+    toast({
+      title: "Account suspended",
+      description: `${suspendUser.name} has been suspended.`,
+    });
+    setSuspendUser(null);
+  };
+
+  const savePackage = () => {
+    if (!editPackage) return;
+    toast({
+      title: "Package updated",
+      description: `${editPackage.name} saved successfully.`,
+    });
+    setEditPackage(null);
+  };
+
+  const confirmDeletePackage = () => {
+    if (!deletePackage) return;
+    toast({
+      title: "Package deleted",
+      description: `${deletePackage.name} has been removed.`,
+      variant: "destructive",
+    });
+    setDeletePackage(null);
+  };
 
   const filteredUsers = mockUsers.filter(user => 
     user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -882,9 +970,18 @@ const AdminSettings = () => {
                                 </div>
                               </div>
                               <div className="flex gap-2 pt-2">
-                                <Button variant="outline" size="sm">Send Message</Button>
-                                <Button variant="outline" size="sm">View Activity Log</Button>
-                                <Button variant="destructive" size="sm">Suspend Account</Button>
+                                <Button variant="outline" size="sm" onClick={() => setMessageUser(user)}>
+                                  <MessageSquare className="mr-2 h-3.5 w-3.5" />
+                                  Send Message
+                                </Button>
+                                <Button variant="outline" size="sm" onClick={() => setActivityUser(user)}>
+                                  <Activity className="mr-2 h-3.5 w-3.5" />
+                                  View Activity Log
+                                </Button>
+                                <Button variant="destructive" size="sm" onClick={() => setSuspendUser(user)}>
+                                  <UserX className="mr-2 h-3.5 w-3.5" />
+                                  Suspend Account
+                                </Button>
                               </div>
                             </div>
                           </TableCell>
@@ -965,8 +1062,8 @@ const AdminSettings = () => {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-1">
-                          <Button size="sm" variant="outline">Edit</Button>
-                          <Button size="sm" variant="ghost">
+                          <Button size="sm" variant="outline" onClick={() => setEditPackage(pkg)}>Edit</Button>
+                          <Button size="sm" variant="ghost" onClick={() => setDeletePackage(pkg)} aria-label={`Delete ${pkg.name}`}>
                             <Trash2 className="h-3 w-3" />
                           </Button>
                         </div>
@@ -1027,6 +1124,202 @@ const AdminSettings = () => {
           </Button>
         </div>
       </div>
+
+      {/* Send Message Dialog */}
+      <Dialog open={!!messageUser} onOpenChange={(o) => !o && setMessageUser(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Send a message</DialogTitle>
+            <DialogDescription>
+              Compose a direct admin message to {messageUser?.name}.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="rounded-md border bg-muted/40 p-3 text-sm">
+              <p className="font-medium">{messageUser?.name}</p>
+              <p className="text-muted-foreground text-xs">{messageUser?.email}</p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="msg-subject">Subject</Label>
+              <Input id="msg-subject" placeholder="Account update" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="msg-body">Message</Label>
+              <Textarea
+                id="msg-body"
+                value={messageBody}
+                onChange={(e) => setMessageBody(e.target.value)}
+                placeholder="Write your message..."
+                rows={5}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setMessageUser(null)}>Cancel</Button>
+            <Button onClick={sendMessage} disabled={!messageBody.trim()}>
+              <Send className="mr-2 h-4 w-4" /> Send
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Activity Log Dialog */}
+      <Dialog open={!!activityUser} onOpenChange={(o) => !o && setActivityUser(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Activity className="h-5 w-5" />
+              Activity Log
+            </DialogTitle>
+            <DialogDescription>
+              Recent activity for {activityUser?.name}.
+            </DialogDescription>
+          </DialogHeader>
+          <ScrollArea className="max-h-80 pr-3">
+            <ol className="relative border-l border-border pl-4 space-y-4">
+              {[
+                { time: "2 hours ago", event: "Signed in from Lagos, NG", ip: "102.89.x.x" },
+                { time: "Yesterday, 18:04", event: "Updated profile information", ip: "102.89.x.x" },
+                { time: "3 days ago", event: "Password changed", ip: "102.89.x.x" },
+                { time: "1 week ago", event: "Placed order #ORD-23187", ip: "102.89.x.x" },
+                { time: "2 weeks ago", event: "Account email verified", ip: "102.89.x.x" },
+              ].map((item, i) => (
+                <li key={i} className="ml-2">
+                  <span className="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border-2 border-background bg-primary" />
+                  <p className="text-sm font-medium">{item.event}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {item.time} · IP {item.ip}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </ScrollArea>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setActivityUser(null)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Suspend confirmation */}
+      <AlertDialog open={!!suspendUser} onOpenChange={(o) => !o && setSuspendUser(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Suspend {suspendUser?.name}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This account will be signed out of all sessions and lose platform access until reactivated.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmSuspend}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Suspend Account
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Edit Package Dialog */}
+      <Dialog open={!!editPackage} onOpenChange={(o) => !o && setEditPackage(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit package</DialogTitle>
+            <DialogDescription>
+              Update pricing and limits for this vendor subscription package.
+            </DialogDescription>
+          </DialogHeader>
+          {editPackage && (
+            <div className="grid gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="pkg-name">Package name</Label>
+                <Input
+                  id="pkg-name"
+                  value={editPackage.name}
+                  onChange={(e) => setEditPackage({ ...editPackage, name: e.target.value })}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label htmlFor="pkg-price">Price (USD)</Label>
+                  <Input
+                    id="pkg-price"
+                    type="number"
+                    value={editPackage.price}
+                    onChange={(e) => setEditPackage({ ...editPackage, price: parseFloat(e.target.value) || 0 })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="pkg-discount">Discount (%)</Label>
+                  <Input
+                    id="pkg-discount"
+                    type="number"
+                    value={editPackage.discount}
+                    onChange={(e) => setEditPackage({ ...editPackage, discount: parseFloat(e.target.value) || 0 })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="pkg-duration">Duration (days)</Label>
+                  <Input
+                    id="pkg-duration"
+                    type="number"
+                    value={editPackage.duration}
+                    onChange={(e) => setEditPackage({ ...editPackage, duration: parseInt(e.target.value) || 0 })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="pkg-limit">Product limit</Label>
+                  <Input
+                    id="pkg-limit"
+                    type="number"
+                    value={editPackage.limit}
+                    onChange={(e) => setEditPackage({ ...editPackage, limit: parseInt(e.target.value) || 0 })}
+                  />
+                  <p className="text-xs text-muted-foreground">Use -1 for unlimited.</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between rounded-md border p-3">
+                <div>
+                  <p className="text-sm font-medium">Active</p>
+                  <p className="text-xs text-muted-foreground">Vendors can subscribe to this package.</p>
+                </div>
+                <Switch
+                  checked={editPackage.status}
+                  onCheckedChange={(c) => setEditPackage({ ...editPackage, status: c })}
+                />
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditPackage(null)}>Cancel</Button>
+            <Button onClick={savePackage}>
+              <Save className="mr-2 h-4 w-4" /> Save changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Package confirmation */}
+      <AlertDialog open={!!deletePackage} onOpenChange={(o) => !o && setDeletePackage(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete "{deletePackage?.name}" package?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will remove the package and prevent new vendor subscriptions. Vendors currently on this package will keep access until their cycle ends.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeletePackage}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete Package
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
