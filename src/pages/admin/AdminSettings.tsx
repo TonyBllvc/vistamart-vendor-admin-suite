@@ -970,9 +970,18 @@ const AdminSettings = () => {
                                 </div>
                               </div>
                               <div className="flex gap-2 pt-2">
-                                <Button variant="outline" size="sm">Send Message</Button>
-                                <Button variant="outline" size="sm">View Activity Log</Button>
-                                <Button variant="destructive" size="sm">Suspend Account</Button>
+                                <Button variant="outline" size="sm" onClick={() => setMessageUser(user)}>
+                                  <MessageSquare className="mr-2 h-3.5 w-3.5" />
+                                  Send Message
+                                </Button>
+                                <Button variant="outline" size="sm" onClick={() => setActivityUser(user)}>
+                                  <Activity className="mr-2 h-3.5 w-3.5" />
+                                  View Activity Log
+                                </Button>
+                                <Button variant="destructive" size="sm" onClick={() => setSuspendUser(user)}>
+                                  <UserX className="mr-2 h-3.5 w-3.5" />
+                                  Suspend Account
+                                </Button>
                               </div>
                             </div>
                           </TableCell>
