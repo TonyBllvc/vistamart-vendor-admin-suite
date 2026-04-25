@@ -99,6 +99,54 @@ const AdminSettings = () => {
   const [stagedImages, setStagedImages] = useState<File[]>([]);
   const [expandedUserId, setExpandedUserId] = useState<number | null>(null);
 
+  // Action dialog state
+  const { toast } = useToast();
+  const [messageUser, setMessageUser] = useState<UserLite | null>(null);
+  const [messageBody, setMessageBody] = useState("");
+  const [activityUser, setActivityUser] = useState<UserLite | null>(null);
+  const [suspendUser, setSuspendUser] = useState<UserLite | null>(null);
+
+  const [editPackage, setEditPackage] = useState<PackageRow | null>(null);
+  const [deletePackage, setDeletePackage] = useState<PackageRow | null>(null);
+
+  const sendMessage = () => {
+    if (!messageUser) return;
+    toast({
+      title: "Message sent",
+      description: `Delivered to ${messageUser.name}.`,
+    });
+    setMessageBody("");
+    setMessageUser(null);
+  };
+
+  const confirmSuspend = () => {
+    if (!suspendUser) return;
+    toast({
+      title: "Account suspended",
+      description: `${suspendUser.name} has been suspended.`,
+    });
+    setSuspendUser(null);
+  };
+
+  const savePackage = () => {
+    if (!editPackage) return;
+    toast({
+      title: "Package updated",
+      description: `${editPackage.name} saved successfully.`,
+    });
+    setEditPackage(null);
+  };
+
+  const confirmDeletePackage = () => {
+    if (!deletePackage) return;
+    toast({
+      title: "Package deleted",
+      description: `${deletePackage.name} has been removed.`,
+      variant: "destructive",
+    });
+    setDeletePackage(null);
+  };
+
   const filteredUsers = mockUsers.filter(user => 
     user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.name.toLowerCase().includes(searchQuery.toLowerCase())
