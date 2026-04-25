@@ -1062,8 +1062,8 @@ const AdminSettings = () => {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-1">
-                          <Button size="sm" variant="outline">Edit</Button>
-                          <Button size="sm" variant="ghost">
+                          <Button size="sm" variant="outline" onClick={() => setEditPackage(pkg)}>Edit</Button>
+                          <Button size="sm" variant="ghost" onClick={() => setDeletePackage(pkg)} aria-label={`Delete ${pkg.name}`}>
                             <Trash2 className="h-3 w-3" />
                           </Button>
                         </div>
