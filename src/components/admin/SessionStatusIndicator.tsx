@@ -108,8 +108,8 @@ export const SessionStatusIndicator = ({
 
       {/* State B: Expiring soon — subtle amber banner */}
       {state === "expiring" && (
-        <Alert className="mb-4 border-warning/40 bg-warning/10 text-warning-foreground">
-          <Clock className="h-4 w-4 text-warning" />
+        <Alert className="mb-4 border-warning/40 bg-warning/10">
+          <Clock className="h-4 w-4 !text-warning" />
           <AlertDescription className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
             <span className="font-medium text-foreground">
               Your session will expire soon.
@@ -117,7 +117,7 @@ export const SessionStatusIndicator = ({
             <span className="text-muted-foreground">
               Activity will keep you logged in.
             </span>
-            <span className="ml-auto text-xs font-mono text-warning">
+            <span className="ml-auto rounded-full bg-warning/20 px-2 py-0.5 text-xs font-mono font-medium text-foreground">
               {formatRemaining(remainingMs)} left
             </span>
           </AlertDescription>
