@@ -16,7 +16,9 @@ import {
   MapPin,
   Phone,
   Activity,
+  ShieldCheck,
 } from "lucide-react";
+import { RoleAccessDialog } from "@/components/admin/RoleAccessDialog";
 import {
   Dialog,
   DialogContent,
@@ -170,6 +172,7 @@ export const AccountDetailsDialog = ({
 }: AccountDetailsDialogProps) => {
   const { toast } = useToast();
   const [confirm, setConfirm] = useState<ConfirmAction>(null);
+  const [roleAccessOpen, setRoleAccessOpen] = useState(false);
 
   if (!account) return null;
 
@@ -293,6 +296,16 @@ export const AccountDetailsDialog = ({
               <Button variant="outline" size="sm">
                 <Pencil className="mr-2 h-4 w-4" /> Edit
               </Button>
+              {account.role === "author" && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-primary/40 text-primary hover:bg-primary/10 hover:text-primary"
+                  onClick={() => setRoleAccessOpen(true)}
+                >
+                  <ShieldCheck className="mr-2 h-4 w-4" /> Edit Role Access
+                </Button>
+              )}
               <Button
                 variant="outline"
                 size="sm"
@@ -376,6 +389,15 @@ export const AccountDetailsDialog = ({
           )}
         </AlertDialogContent>
       </AlertDialog>
+
+      {account.role === "author" && (
+        <RoleAccessDialog
+          open={roleAccessOpen}
+          onOpenChange={setRoleAccessOpen}
+          authorId={account.id}
+          username={account.username}
+        />
+      )}
     </>
   );
 };
