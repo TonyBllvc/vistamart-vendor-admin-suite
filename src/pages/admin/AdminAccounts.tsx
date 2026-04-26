@@ -313,16 +313,29 @@ const AdminAccounts = () => {
             </>
           )}
         </p>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => {
-            setLoading(true);
-            setTimeout(() => setLoading(false), 700);
-          }}
-        >
-          <RefreshCw className="mr-2 h-4 w-4" /> Refresh
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setError((e) => (e ? null : "Unable to reach the accounts service. Please try again."));
+            }}
+          >
+            <TriangleAlert className="mr-2 h-4 w-4" />
+            {error ? "Clear error" : "Simulate error"}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setError(null);
+              setLoading(true);
+              setTimeout(() => setLoading(false), 700);
+            }}
+          >
+            <RefreshCw className="mr-2 h-4 w-4" /> Refresh
+          </Button>
+        </div>
       </div>
 
       {/* Table / States */}
