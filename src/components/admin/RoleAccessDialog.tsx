@@ -158,17 +158,15 @@ export const RoleAccessDialog = ({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-2xl p-0 overflow-hidden">
-        <DialogHeader className="bg-gradient-to-br from-purple-500/10 to-transparent p-6 pb-4">
+        <DialogHeader className="bg-gradient-to-br from-primary/5 to-transparent p-6 pb-4">
           <div className="flex items-start gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-purple-500/15 text-purple-600 dark:text-purple-400">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
               <ShieldCheck className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
               <DialogTitle className="text-lg">
                 Manage Role Access —{" "}
-                <span className="text-purple-600 dark:text-purple-400">
-                  @{username}
-                </span>
+                <span className="text-primary">@{username}</span>
               </DialogTitle>
               <DialogDescription>
                 Select the platform modules this Author can manage.
