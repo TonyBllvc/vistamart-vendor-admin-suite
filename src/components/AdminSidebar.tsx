@@ -12,6 +12,7 @@ import {
   FileText,
   Shield,
   AlertTriangle,
+  UserCog,
 } from "lucide-react";
 import {
   Sidebar,
@@ -41,6 +42,7 @@ const menuItems = [
   { title: "Messages", url: "/admin/messages", icon: MessageCircle },
   { title: "System Logs", url: "/admin/system-logs", icon: AlertTriangle },
   { title: "Settings", url: "/admin/settings", icon: Settings },
+  { title: "My Profile", url: "/admin/profile", icon: UserCog },
 ];
 
 export function AdminSidebar() {
