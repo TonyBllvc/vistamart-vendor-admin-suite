@@ -389,6 +389,15 @@ export const AccountDetailsDialog = ({
           )}
         </AlertDialogContent>
       </AlertDialog>
+
+      {account.role === "author" && (
+        <RoleAccessDialog
+          open={roleAccessOpen}
+          onOpenChange={setRoleAccessOpen}
+          authorId={account.id}
+          username={account.username}
+        />
+      )}
     </>
   );
 };
