@@ -115,14 +115,6 @@ const confirmCopy: Record<
     successMessage: string;
   }
 > = {
-  suspend: {
-    title: "Suspend this account?",
-    description:
-      "The user will lose access to the platform until you reactivate them. They will be signed out of all sessions.",
-    confirmLabel: "Suspend Account",
-    destructive: true,
-    successMessage: "Account suspended.",
-  },
   logout: {
     title: "Force logout from all sessions?",
     description:
