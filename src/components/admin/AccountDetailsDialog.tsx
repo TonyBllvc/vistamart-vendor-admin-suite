@@ -391,6 +391,12 @@ export const AccountDetailsDialog = ({
           username={account.username}
         />
       )}
+
+      <SuspendAccountDialog
+        account={account}
+        open={suspendOpen}
+        onOpenChange={setSuspendOpen}
+      />
     </>
   );
 };
