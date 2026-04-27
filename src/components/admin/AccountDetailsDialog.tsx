@@ -302,7 +302,7 @@ export const AccountDetailsDialog = ({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setConfirm("logout")}
+                onClick={() => setForceLogoutOpen(true)}
               >
                 <LogOut className="mr-2 h-4 w-4" /> Force Logout
               </Button>
