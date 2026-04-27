@@ -98,7 +98,6 @@ const initials = (name: string) =>
     .toUpperCase();
 
 type ConfirmAction =
-  | "suspend"
   | "logout"
   | "ban"
   | "delete"
