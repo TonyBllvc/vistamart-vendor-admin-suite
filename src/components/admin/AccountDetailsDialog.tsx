@@ -327,7 +327,7 @@ export const AccountDetailsDialog = ({
                   variant="outline"
                   size="sm"
                   className="border-warning/40 text-warning hover:bg-warning/10 hover:text-warning"
-                  onClick={() => setConfirm("suspend")}
+                  onClick={() => setSuspendOpen(true)}
                 >
                   <ShieldOff className="mr-2 h-4 w-4" /> Suspend
                 </Button>
