@@ -165,6 +165,7 @@ export const AccountDetailsDialog = ({
   const { toast } = useToast();
   const [confirm, setConfirm] = useState<ConfirmAction>(null);
   const [roleAccessOpen, setRoleAccessOpen] = useState(false);
+  const [suspendOpen, setSuspendOpen] = useState(false);
 
   if (!account) return null;
 
