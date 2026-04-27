@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Search,
   X,
@@ -11,12 +12,6 @@ import {
   RefreshCw,
   TriangleAlert,
 } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,10 +27,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  AccountDetailsDialog,
-  type AccountDetails,
-} from "@/components/admin/AccountDetailsDialog";
 import { cn } from "@/lib/utils";
 
 type RoleKey = "all" | "admin" | "author" | "vendor" | "affiliate" | "user";
@@ -108,6 +99,7 @@ const initials = (name: string) =>
     .toUpperCase();
 
 const AdminAccounts = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<RoleKey>("all");
   const [search, setSearch] = useState("");
   const [submittedSearch, setSubmittedSearch] = useState("");
@@ -115,12 +107,9 @@ const AdminAccounts = () => {
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const [activeAccount, setActiveAccount] = useState<AccountDetails | null>(null);
-  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const openDetails = (row: AccountRow) => {
-    setActiveAccount(row);
-    setDetailsOpen(true);
+    navigate(`/admin/accounts/${row.id}`);
   };
 
   // Counts per role
@@ -479,66 +468,15 @@ const AdminAccounts = () => {
                           className="text-right"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <TooltipProvider delayDuration={150}>
-                            <div className="flex items-center justify-end gap-1">
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8"
-                                    onClick={() => openDetails(row)}
-                                    aria-label="View account"
-                                  >
-                                    <Eye className="h-4 w-4" />
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>View</TooltipContent>
-                              </Tooltip>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8"
-                                    onClick={() => openDetails(row)}
-                                    aria-label="Edit account"
-                                  >
-                                    <Pencil className="h-4 w-4" />
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>Edit</TooltipContent>
-                              </Tooltip>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8 text-destructive hover:text-destructive"
-                                    onClick={() => openDetails(row)}
-                                    aria-label="Suspend account"
-                                  >
-                                    <ShieldOff className="h-4 w-4" />
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>Suspend</TooltipContent>
-                              </Tooltip>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8"
-                                    onClick={() => openDetails(row)}
-                                    aria-label="Force logout"
-                                  >
-                                    <LogOut className="h-4 w-4" />
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>Force Logout</TooltipContent>
-                              </Tooltip>
-                            </div>
-                          </TooltipProvider>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => openDetails(row)}
+                            aria-label={`View ${row.fullName}`}
+                          >
+                            <Eye className="mr-2 h-4 w-4" />
+                            View
+                          </Button>
                         </TableCell>
                       </TableRow>
                     );
@@ -561,12 +499,6 @@ const AdminAccounts = () => {
           </Button>
         </div>
       )}
-
-      <AccountDetailsDialog
-        account={activeAccount}
-        open={detailsOpen}
-        onOpenChange={setDetailsOpen}
-      />
     </div>
   );
 };
