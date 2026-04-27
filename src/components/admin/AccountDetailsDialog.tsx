@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { RoleAccessDialog } from "@/components/admin/RoleAccessDialog";
 import { SuspendAccountDialog } from "@/components/admin/SuspendAccountDialog";
+import { ForceLogoutDialog } from "@/components/admin/ForceLogoutDialog";
 import {
   Dialog,
   DialogContent,
@@ -98,7 +99,6 @@ const initials = (name: string) =>
     .toUpperCase();
 
 type ConfirmAction =
-  | "logout"
   | "ban"
   | "delete"
   | "reset-password"
@@ -115,14 +115,6 @@ const confirmCopy: Record<
     successMessage: string;
   }
 > = {
-  logout: {
-    title: "Force logout from all sessions?",
-    description:
-      "All active sessions for this user will be immediately revoked. The user will need to sign in again.",
-    confirmLabel: "Force Logout",
-    destructive: false,
-    successMessage: "All sessions have been revoked.",
-  },
   ban: {
     title: "Ban this account permanently?",
     description:
@@ -166,6 +158,7 @@ export const AccountDetailsDialog = ({
   const [confirm, setConfirm] = useState<ConfirmAction>(null);
   const [roleAccessOpen, setRoleAccessOpen] = useState(false);
   const [suspendOpen, setSuspendOpen] = useState(false);
+  const [forceLogoutOpen, setForceLogoutOpen] = useState(false);
 
   if (!account) return null;
 
@@ -309,7 +302,7 @@ export const AccountDetailsDialog = ({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setConfirm("logout")}
+                onClick={() => setForceLogoutOpen(true)}
               >
                 <LogOut className="mr-2 h-4 w-4" /> Force Logout
               </Button>
@@ -396,6 +389,12 @@ export const AccountDetailsDialog = ({
         account={account}
         open={suspendOpen}
         onOpenChange={setSuspendOpen}
+      />
+
+      <ForceLogoutDialog
+        account={account}
+        open={forceLogoutOpen}
+        onOpenChange={setForceLogoutOpen}
       />
     </>
   );
