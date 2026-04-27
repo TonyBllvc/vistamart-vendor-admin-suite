@@ -19,6 +19,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { RoleAccessDialog } from "@/components/admin/RoleAccessDialog";
+import { SuspendAccountDialog } from "@/components/admin/SuspendAccountDialog";
 import {
   Dialog,
   DialogContent,
