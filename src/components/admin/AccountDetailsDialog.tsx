@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { RoleAccessDialog } from "@/components/admin/RoleAccessDialog";
 import { SuspendAccountDialog } from "@/components/admin/SuspendAccountDialog";
+import { ForceLogoutDialog } from "@/components/admin/ForceLogoutDialog";
 import {
   Dialog,
   DialogContent,
