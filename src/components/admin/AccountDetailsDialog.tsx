@@ -99,7 +99,6 @@ const initials = (name: string) =>
     .toUpperCase();
 
 type ConfirmAction =
-  | "logout"
   | "ban"
   | "delete"
   | "reset-password"
@@ -116,14 +115,6 @@ const confirmCopy: Record<
     successMessage: string;
   }
 > = {
-  logout: {
-    title: "Force logout from all sessions?",
-    description:
-      "All active sessions for this user will be immediately revoked. The user will need to sign in again.",
-    confirmLabel: "Force Logout",
-    destructive: false,
-    successMessage: "All sessions have been revoked.",
-  },
   ban: {
     title: "Ban this account permanently?",
     description:
