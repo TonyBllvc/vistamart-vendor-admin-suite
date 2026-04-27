@@ -158,6 +158,7 @@ export const AccountDetailsDialog = ({
   const [confirm, setConfirm] = useState<ConfirmAction>(null);
   const [roleAccessOpen, setRoleAccessOpen] = useState(false);
   const [suspendOpen, setSuspendOpen] = useState(false);
+  const [forceLogoutOpen, setForceLogoutOpen] = useState(false);
 
   if (!account) return null;
 
