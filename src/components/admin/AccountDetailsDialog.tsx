@@ -19,6 +19,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { RoleAccessDialog } from "@/components/admin/RoleAccessDialog";
+import { SuspendAccountDialog } from "@/components/admin/SuspendAccountDialog";
 import {
   Dialog,
   DialogContent,
@@ -97,7 +98,6 @@ const initials = (name: string) =>
     .toUpperCase();
 
 type ConfirmAction =
-  | "suspend"
   | "logout"
   | "ban"
   | "delete"
@@ -115,14 +115,6 @@ const confirmCopy: Record<
     successMessage: string;
   }
 > = {
-  suspend: {
-    title: "Suspend this account?",
-    description:
-      "The user will lose access to the platform until you reactivate them. They will be signed out of all sessions.",
-    confirmLabel: "Suspend Account",
-    destructive: true,
-    successMessage: "Account suspended.",
-  },
   logout: {
     title: "Force logout from all sessions?",
     description:
@@ -173,6 +165,7 @@ export const AccountDetailsDialog = ({
   const { toast } = useToast();
   const [confirm, setConfirm] = useState<ConfirmAction>(null);
   const [roleAccessOpen, setRoleAccessOpen] = useState(false);
+  const [suspendOpen, setSuspendOpen] = useState(false);
 
   if (!account) return null;
 
@@ -334,7 +327,7 @@ export const AccountDetailsDialog = ({
                   variant="outline"
                   size="sm"
                   className="border-warning/40 text-warning hover:bg-warning/10 hover:text-warning"
-                  onClick={() => setConfirm("suspend")}
+                  onClick={() => setSuspendOpen(true)}
                 >
                   <ShieldOff className="mr-2 h-4 w-4" /> Suspend
                 </Button>
@@ -398,6 +391,12 @@ export const AccountDetailsDialog = ({
           username={account.username}
         />
       )}
+
+      <SuspendAccountDialog
+        account={account}
+        open={suspendOpen}
+        onOpenChange={setSuspendOpen}
+      />
     </>
   );
 };
