@@ -390,6 +390,12 @@ export const AccountDetailsDialog = ({
         open={suspendOpen}
         onOpenChange={setSuspendOpen}
       />
+
+      <ForceLogoutDialog
+        account={account}
+        open={forceLogoutOpen}
+        onOpenChange={setForceLogoutOpen}
+      />
     </>
   );
 };
