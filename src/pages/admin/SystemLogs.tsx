@@ -151,9 +151,27 @@ Operator intervention required — manually reconcile against provider dashboard
     severity: "critical",
     category: "background_task",
     title: "Celery worker exhausted retries on process_wallet_settlement",
-    detail: "Task failed after 5 retries. Underlying DB connection pool exhausted.",
+    detail: `CeleryError: Max retries exceeded for task process_wallet_settlement
+Task ID: 7f3a9c22-4e8b-42d1-9f04-abc123def456
+
+Traceback (most recent call last):
+  File "/app/tasks/wallet.py", line 88, in process_wallet_settlement
+    with transaction.atomic():
+  File "/usr/local/lib/python3.11/site-packages/django/db/backends/base/base.py", line 258, in _cursor
+    return self._prepare_cursor(self.create_cursor(name))
+django.db.utils.OperationalError: FATAL: remaining connection slots are reserved for non-replication superuser connections
+
+Retries: 5/5. Task moved to dead-letter queue.`,
     adminEmail: CURRENT_ADMIN_EMAIL,
     relatedAccount: null,
+    context: {
+      task_name: "process_wallet_settlement",
+      task_id: "7f3a9c22-4e8b-42d1-9f04-abc123def456",
+      queue: "wallet",
+      retries: 5,
+      max_retries: 5,
+      db_pool_size: 20,
+    },
     createdAt: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
   },
   {
