@@ -28,6 +28,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import {
+  BulkEditDialog,
+  BulkForceLogoutDialog,
+  BulkSuspendDialog,
+  type BulkAccount,
+} from "@/components/admin/BulkActionsDialogs";
 
 type RoleKey = "all" | "admin" | "author" | "vendor" | "affiliate" | "user";
 type AccountStatus =
@@ -107,6 +113,9 @@ const AdminAccounts = () => {
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [bulkEditOpen, setBulkEditOpen] = useState(false);
+  const [bulkLogoutOpen, setBulkLogoutOpen] = useState(false);
+  const [bulkSuspendOpen, setBulkSuspendOpen] = useState(false);
 
   const openDetails = (row: AccountRow) => {
     navigate(`/admin/accounts/${row.id}`);
@@ -146,6 +155,19 @@ const AdminAccounts = () => {
 
   const visible = filtered.slice(0, visibleCount);
   const hasMore = visible.length < filtered.length;
+
+  const selectedAccounts: BulkAccount[] = useMemo(
+    () =>
+      MOCK_ACCOUNTS.filter((a) => selected.has(a.id)).map((a) => ({
+        id: a.id,
+        fullName: a.fullName,
+        username: a.username,
+        email: a.email,
+        role: a.role,
+        status: a.status,
+      })),
+    [selected],
+  );
 
   const allOnPageSelected =
     visible.length > 0 && visible.every((r) => selected.has(r.id));
@@ -265,13 +287,26 @@ const AdminAccounts = () => {
               {selected.size} selected
             </span>
             <div className="ml-auto flex flex-wrap gap-2">
-              <Button size="sm" variant="outline">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setBulkEditOpen(true)}
+              >
                 <Pencil className="mr-2 h-4 w-4" /> Edit Selected
               </Button>
-              <Button size="sm" variant="outline">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setBulkLogoutOpen(true)}
+                className="border-warning/40 text-warning hover:bg-warning/10 hover:text-warning"
+              >
                 <LogOut className="mr-2 h-4 w-4" /> Force Logout Selected
               </Button>
-              <Button size="sm" variant="destructive">
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={() => setBulkSuspendOpen(true)}
+              >
                 <ShieldOff className="mr-2 h-4 w-4" /> Suspend Selected
               </Button>
               <Button
@@ -499,6 +534,26 @@ const AdminAccounts = () => {
           </Button>
         </div>
       )}
+
+      {/* Bulk action dialogs */}
+      <BulkEditDialog
+        accounts={selectedAccounts}
+        open={bulkEditOpen}
+        onOpenChange={setBulkEditOpen}
+        onSuccess={() => setSelected(new Set())}
+      />
+      <BulkForceLogoutDialog
+        accounts={selectedAccounts}
+        open={bulkLogoutOpen}
+        onOpenChange={setBulkLogoutOpen}
+        onSuccess={() => setSelected(new Set())}
+      />
+      <BulkSuspendDialog
+        accounts={selectedAccounts}
+        open={bulkSuspendOpen}
+        onOpenChange={setBulkSuspendOpen}
+        onSuccess={() => setSelected(new Set())}
+      />
     </div>
   );
 };
