@@ -66,6 +66,16 @@ type Category =
   | "guest_session"
   | "general";
 
+interface RelatedAccount {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  isActive: boolean;
+  isBanned: boolean;
+  isLocked: boolean;
+}
+
 interface SystemLog {
   id: string;
   severity: Severity;
@@ -74,6 +84,8 @@ interface SystemLog {
   detail: string;
   adminEmail: string | null;
   relatedAccount: string | null;
+  relatedAccountData?: RelatedAccount | null;
+  context?: Record<string, unknown> | null;
   createdAt: string; // ISO
 }
 
