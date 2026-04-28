@@ -521,6 +521,26 @@ const AdminAccounts = () => {
           </Button>
         </div>
       )}
+
+      {/* Bulk action dialogs */}
+      <BulkEditDialog
+        accounts={selectedAccounts}
+        open={bulkEditOpen}
+        onOpenChange={setBulkEditOpen}
+        onSuccess={() => setSelected(new Set())}
+      />
+      <BulkForceLogoutDialog
+        accounts={selectedAccounts}
+        open={bulkLogoutOpen}
+        onOpenChange={setBulkLogoutOpen}
+        onSuccess={() => setSelected(new Set())}
+      />
+      <BulkSuspendDialog
+        accounts={selectedAccounts}
+        open={bulkSuspendOpen}
+        onOpenChange={setBulkSuspendOpen}
+        onSuccess={() => setSelected(new Set())}
+      />
     </div>
   );
 };
