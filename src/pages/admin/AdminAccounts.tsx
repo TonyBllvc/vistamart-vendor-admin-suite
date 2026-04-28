@@ -156,6 +156,19 @@ const AdminAccounts = () => {
   const visible = filtered.slice(0, visibleCount);
   const hasMore = visible.length < filtered.length;
 
+  const selectedAccounts: BulkAccount[] = useMemo(
+    () =>
+      MOCK_ACCOUNTS.filter((a) => selected.has(a.id)).map((a) => ({
+        id: a.id,
+        fullName: a.fullName,
+        username: a.username,
+        email: a.email,
+        role: a.role,
+        status: a.status,
+      })),
+    [selected],
+  );
+
   const allOnPageSelected =
     visible.length > 0 && visible.every((r) => selected.has(r.id));
   const someSelected = selected.size > 0;
