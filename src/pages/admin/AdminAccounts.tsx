@@ -113,6 +113,9 @@ const AdminAccounts = () => {
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [bulkEditOpen, setBulkEditOpen] = useState(false);
+  const [bulkLogoutOpen, setBulkLogoutOpen] = useState(false);
+  const [bulkSuspendOpen, setBulkSuspendOpen] = useState(false);
 
   const openDetails = (row: AccountRow) => {
     navigate(`/admin/accounts/${row.id}`);
