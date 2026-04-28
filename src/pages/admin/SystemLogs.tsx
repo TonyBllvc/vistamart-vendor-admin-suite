@@ -674,60 +674,236 @@ export default function SystemLogs() {
           </p>
         )}
 
-        {/* Detail drawer */}
-        <Sheet open={!!detailLog} onOpenChange={(o) => !o && setDetailLog(null)}>
-          <SheetContent className="w-full sm:max-w-lg">
+        {/* Detail dialog */}
+        <Dialog open={!!detailLog} onOpenChange={(o) => !o && setDetailLog(null)}>
+          <DialogContent className="max-w-3xl p-0 gap-0 max-h-[90vh] flex flex-col">
             {detailLog && (
               <>
-                <SheetHeader>
-                  <div className="flex items-center gap-2 mb-2">
-                    <SeverityBadge severity={detailLog.severity} />
-                    <Badge variant="outline">{CATEGORY_LABELS[detailLog.category]}</Badge>
+                {/* Header strip */}
+                <div
+                  className={cn(
+                    "px-6 py-4 border-b flex flex-wrap items-center gap-3",
+                    detailLog.severity === "critical" && "bg-red-50 dark:bg-red-950/30",
+                    detailLog.severity === "error" && "bg-orange-50 dark:bg-orange-950/20",
+                    detailLog.severity === "warning" && "bg-amber-50 dark:bg-amber-950/20",
+                    detailLog.severity === "info" && "bg-blue-50 dark:bg-blue-950/20"
+                  )}
+                >
+                  <SeverityBadge severity={detailLog.severity} />
+                  <Badge variant="outline">{CATEGORY_LABELS[detailLog.category]}</Badge>
+                  <span className="text-xs text-muted-foreground">
+                    {new Date(detailLog.createdAt).toLocaleString()}
+                  </span>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    className="ml-auto"
+                    onClick={() => {
+                      setResolveTarget(detailLog);
+                    }}
+                  >
+                    <Check className="h-4 w-4" />
+                    Resolve This Log
+                  </Button>
+                </div>
+
+                <ScrollArea className="flex-1">
+                  <div className="px-6 py-5 space-y-6">
+                    {/* Hidden a11y title */}
+                    <DialogHeader className="sr-only">
+                      <DialogTitle>{detailLog.title}</DialogTitle>
+                      <DialogDescription>System log detail</DialogDescription>
+                    </DialogHeader>
+
+                    {/* Section 1 — Summary */}
+                    <section className="space-y-3">
+                      <h2 className="text-lg font-semibold leading-snug">{detailLog.title}</h2>
+                      <div className="grid sm:grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <div className="text-xs font-medium text-muted-foreground">Admin Email</div>
+                          <div>
+                            {detailLog.adminEmail ?? (
+                              <span className="italic text-muted-foreground">
+                                System-generated (no actor)
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-xs font-medium text-muted-foreground">Related Account</div>
+                          <div>
+                            {detailLog.relatedAccountData ? (
+                              <Link
+                                to={`/admin/accounts/${detailLog.relatedAccountData.id}`}
+                                className="text-primary hover:underline"
+                              >
+                                {detailLog.relatedAccountData.email}
+                              </Link>
+                            ) : detailLog.relatedAccount ? (
+                              <span>{detailLog.relatedAccount}</span>
+                            ) : (
+                              <span className="italic text-muted-foreground">None</span>
+                            )}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-xs font-medium text-muted-foreground">Log ID</div>
+                          <div className="font-mono text-xs">{detailLog.id}</div>
+                        </div>
+                      </div>
+                    </section>
+
+                    {/* Section 2 — Detail */}
+                    <section>
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-sm font-semibold">Detail</h3>
+                      </div>
+                      <div className="relative rounded-md border bg-zinc-950 text-zinc-100">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="absolute top-2 right-2 h-7 px-2 text-zinc-300 hover:text-white hover:bg-zinc-800"
+                          onClick={() => {
+                            navigator.clipboard.writeText(detailLog.detail);
+                            toast.success("Detail copied to clipboard");
+                          }}
+                        >
+                          <Copy className="h-3.5 w-3.5" />
+                          Copy
+                        </Button>
+                        <pre className="max-h-80 overflow-auto p-4 pr-20 text-xs font-mono whitespace-pre-wrap break-words">
+                          {detailLog.detail}
+                        </pre>
+                      </div>
+                    </section>
+
+                    {/* Section 3 — Context Data */}
+                    {detailLog.context && Object.keys(detailLog.context).length > 0 && (
+                      <section>
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="text-sm font-semibold">Context Data</h3>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-7 px-2"
+                            onClick={() => {
+                              navigator.clipboard.writeText(
+                                JSON.stringify(detailLog.context, null, 2)
+                              );
+                              toast.success("Context JSON copied");
+                            }}
+                          >
+                            <Copy className="h-3.5 w-3.5" />
+                            Copy JSON
+                          </Button>
+                        </div>
+                        <div className="rounded-md border bg-muted/40 p-3 font-mono text-xs space-y-1">
+                          {Object.entries(detailLog.context).map(([k, v]) => (
+                            <div key={k} className="flex gap-2">
+                              <span className="text-blue-600 dark:text-blue-400 shrink-0">
+                                {k}:
+                              </span>
+                              <span
+                                className={cn(
+                                  typeof v === "string"
+                                    ? "text-green-700 dark:text-green-400"
+                                    : typeof v === "number"
+                                    ? "text-orange-600 dark:text-orange-400"
+                                    : v === null
+                                    ? "text-muted-foreground italic"
+                                    : "text-foreground",
+                                  "break-all"
+                                )}
+                              >
+                                {v === null ? "null" : JSON.stringify(v)}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </section>
+                    )}
+
+                    {/* Section 4 — Related Account */}
+                    {detailLog.relatedAccountData && (
+                      <section>
+                        <h3 className="text-sm font-semibold mb-2">Related Account</h3>
+                        <div className="rounded-md border p-4 flex items-start gap-3">
+                          <Avatar className="h-10 w-10">
+                            <AvatarFallback>
+                              {detailLog.relatedAccountData.name
+                                .split(" ")
+                                .map((s) => s[0])
+                                .slice(0, 2)
+                                .join("")}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="font-medium">
+                                {detailLog.relatedAccountData.name}
+                              </span>
+                              <Badge variant="secondary">
+                                {detailLog.relatedAccountData.role}
+                              </Badge>
+                            </div>
+                            <div className="text-sm text-muted-foreground truncate">
+                              {detailLog.relatedAccountData.email}
+                            </div>
+                            <div className="flex flex-wrap gap-1.5 mt-2">
+                              <Badge
+                                variant="outline"
+                                className={cn(
+                                  detailLog.relatedAccountData.isActive
+                                    ? "text-green-700 border-green-300 dark:text-green-400"
+                                    : "text-muted-foreground"
+                                )}
+                              >
+                                {detailLog.relatedAccountData.isActive ? "Active" : "Inactive"}
+                              </Badge>
+                              {detailLog.relatedAccountData.isBanned && (
+                                <Badge className="bg-red-600 text-white border-transparent">
+                                  Banned
+                                </Badge>
+                              )}
+                              {detailLog.relatedAccountData.isLocked && (
+                                <Badge className="bg-amber-500 text-white border-transparent">
+                                  Locked
+                                </Badge>
+                              )}
+                            </div>
+                            <Link
+                              to={`/admin/accounts/${detailLog.relatedAccountData.id}`}
+                              className="inline-flex items-center gap-1 mt-3 text-sm text-primary hover:underline"
+                            >
+                              View Full Account
+                              <ArrowRight className="h-3.5 w-3.5" />
+                            </Link>
+                          </div>
+                        </div>
+                      </section>
+                    )}
                   </div>
-                  <SheetTitle className="text-left">{detailLog.title}</SheetTitle>
-                  <SheetDescription className="text-left">
-                    {new Date(detailLog.createdAt).toLocaleString()} · {formatRelative(detailLog.createdAt)}
-                  </SheetDescription>
-                </SheetHeader>
-                <div className="mt-6 space-y-4 text-sm">
-                  <div>
-                    <div className="text-xs font-medium text-muted-foreground mb-1">Detail</div>
-                    <p className="rounded-md bg-muted p-3 text-sm">{detailLog.detail}</p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <div className="text-xs font-medium text-muted-foreground">Admin</div>
-                      <div>{detailLog.adminEmail ?? "—"}</div>
-                    </div>
-                    <div>
-                      <div className="text-xs font-medium text-muted-foreground">Related account</div>
-                      <div>{detailLog.relatedAccount ?? "—"}</div>
-                    </div>
-                    <div>
-                      <div className="text-xs font-medium text-muted-foreground">Log ID</div>
-                      <div className="font-mono text-xs">{detailLog.id}</div>
-                    </div>
-                  </div>
-                  <div className="pt-4 flex gap-2">
-                    <Button
-                      variant="destructive"
-                      className="flex-1"
-                      onClick={() => {
-                        setResolveTarget(detailLog);
-                        setDetailLog(null);
-                      }}
-                    >
-                      <Check className="h-4 w-4" /> Resolve
-                    </Button>
-                    <Button variant="outline" onClick={() => setDetailLog(null)}>
-                      <XIcon className="h-4 w-4" /> Close
-                    </Button>
-                  </div>
+                </ScrollArea>
+
+                {/* Footer */}
+                <div className="border-t px-6 py-3 flex items-center justify-between gap-3 bg-background">
+                  <Button variant="ghost" size="sm" onClick={() => setDetailLog(null)}>
+                    <ArrowLeft className="h-4 w-4" />
+                    Back to Logs
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => setResolveTarget(detailLog)}
+                  >
+                    <Check className="h-4 w-4" />
+                    Resolve & Delete
+                  </Button>
                 </div>
               </>
             )}
-          </SheetContent>
-        </Sheet>
+          </DialogContent>
+        </Dialog>
 
         {/* Single resolve modal */}
         <Dialog
