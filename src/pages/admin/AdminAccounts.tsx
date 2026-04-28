@@ -274,13 +274,26 @@ const AdminAccounts = () => {
               {selected.size} selected
             </span>
             <div className="ml-auto flex flex-wrap gap-2">
-              <Button size="sm" variant="outline">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setBulkEditOpen(true)}
+              >
                 <Pencil className="mr-2 h-4 w-4" /> Edit Selected
               </Button>
-              <Button size="sm" variant="outline">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setBulkLogoutOpen(true)}
+                className="border-warning/40 text-warning hover:bg-warning/10 hover:text-warning"
+              >
                 <LogOut className="mr-2 h-4 w-4" /> Force Logout Selected
               </Button>
-              <Button size="sm" variant="destructive">
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={() => setBulkSuspendOpen(true)}
+              >
                 <ShieldOff className="mr-2 h-4 w-4" /> Suspend Selected
               </Button>
               <Button
