@@ -115,10 +115,35 @@ const MOCK_LOGS: SystemLog[] = [
     severity: "critical",
     category: "payment",
     title: "Payment gateway timeout — Paystack callback did not return within 30s for transaction TXN-88421",
-    detail:
-      "The payment provider failed to respond to the verification callback. Affected wallet top-up may be stuck in pending.",
+    detail: `Traceback (most recent call last):
+  File "/app/payments/paystack.py", line 142, in verify_callback
+    response = self.client.get(url, timeout=30)
+  File "/usr/local/lib/python3.11/site-packages/httpx/_client.py", line 1054, in get
+    return self.request("GET", url, ...)
+httpx.ReadTimeout: timed out after 30s
+
+Context: verifying transaction TXN-88421 for wallet top-up of ₦25,000.
+Retry 3/3 exhausted. Transaction left in PENDING state.
+Operator intervention required — manually reconcile against provider dashboard.`,
     adminEmail: null,
     relatedAccount: "jane.doe@example.com",
+    relatedAccountData: {
+      id: "acc_4821",
+      name: "Jane Doe",
+      email: "jane.doe@example.com",
+      role: "User",
+      isActive: true,
+      isBanned: false,
+      isLocked: false,
+    },
+    context: {
+      transaction_id: "TXN-88421",
+      amount_ngn: 25000,
+      provider: "paystack",
+      retries: 3,
+      last_http_status: null,
+      initiated_at: "2026-04-28T08:14:22Z",
+    },
     createdAt: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
   },
   {
