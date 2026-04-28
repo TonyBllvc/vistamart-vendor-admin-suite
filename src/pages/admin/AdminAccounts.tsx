@@ -28,6 +28,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import {
+  BulkEditDialog,
+  BulkForceLogoutDialog,
+  BulkSuspendDialog,
+  type BulkAccount,
+} from "@/components/admin/BulkActionsDialogs";
 
 type RoleKey = "all" | "admin" | "author" | "vendor" | "affiliate" | "user";
 type AccountStatus =
