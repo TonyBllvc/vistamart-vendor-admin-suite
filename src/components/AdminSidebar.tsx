@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   Users,
   Package,
+  Package as PackageIcon,
   Settings,
   BarChart3,
   MessageCircle,
