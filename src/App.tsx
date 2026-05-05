@@ -28,6 +28,7 @@ import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminRequests from "./pages/admin/AdminRequests";
 import SystemLogs from "./pages/admin/SystemLogs";
+import PackageForm from "./pages/admin/PackageForm";
 import BlogManagement from "./pages/admin/BlogManagement";
 import BlogUpload from "./pages/admin/BlogUpload";
 import ProductUpload from "./pages/vendor/ProductUpload";
@@ -89,6 +90,9 @@ const App = () => (
             <Route path="user-wallets" element={<AdminUserWallets />} />
             <Route path="messages" element={<AdminMessages />} />
             <Route path="system-logs" element={<SystemLogs />} />
+            <Route path="packages" element={<PackageForm />} />
+            <Route path="packages/new" element={<PackageForm />} />
+            <Route path="packages/:id/edit" element={<PackageForm />} />
             <Route path="settings" element={<AdminSettings />} />
             <Route path="settings/change-password" element={<AdminChangePassword />} />
             <Route path="profile" element={<AdminProfile />} />
