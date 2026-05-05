@@ -90,6 +90,9 @@ const App = () => (
             <Route path="user-wallets" element={<AdminUserWallets />} />
             <Route path="messages" element={<AdminMessages />} />
             <Route path="system-logs" element={<SystemLogs />} />
+            <Route path="packages" element={<PackageForm />} />
+            <Route path="packages/new" element={<PackageForm />} />
+            <Route path="packages/:id/edit" element={<PackageForm />} />
             <Route path="settings" element={<AdminSettings />} />
             <Route path="settings/change-password" element={<AdminChangePassword />} />
             <Route path="profile" element={<AdminProfile />} />
