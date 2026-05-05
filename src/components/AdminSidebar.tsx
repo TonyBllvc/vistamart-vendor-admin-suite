@@ -33,6 +33,7 @@ const menuItems = [
   { title: "Brand Management", url: "/admin/brands", icon: Package },
   { title: "Category Management", url: "/admin/categories", icon: Tag },
   { title: "Products", url: "/admin/products", icon: Package },
+  { title: "Packages", url: "/admin/packages", icon: PackageIcon },
   { title: "Orders", url: "/admin/orders", icon: ShoppingBag },
   { title: "Requests & Disputes", url: "/admin/requests", icon: Shield },
   { title: "Blog", url: "/admin/blog", icon: FileText },
