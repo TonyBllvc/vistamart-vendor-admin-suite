@@ -35,6 +35,7 @@ import BlogUpload from "./pages/admin/BlogUpload";
 import ProductUpload from "./pages/vendor/ProductUpload";
 import ProductManagement from "./pages/vendor/ProductManagement";
 import VendorPackages from "./pages/vendor/VendorPackages";
+import VendorStoreSetup from "./pages/vendor/VendorStoreSetup";
 import VendorRevenue from "./pages/vendor/VendorRevenue";
 import VendorSettings from "./pages/vendor/VendorSettings";
 import VendorWallet from "./pages/vendor/VendorWallet";
@@ -102,6 +103,7 @@ const App = () => (
           {/* Vendor Routes */}
           <Route path="/vendor" element={<SidebarProvider><VendorLayout /></SidebarProvider>}>
             <Route index element={<VendorDashboard />} />
+            <Route path="store-setup" element={<VendorStoreSetup />} />
             <Route path="products/upload" element={<ProductUpload />} />
             <Route path="products/manage" element={<ProductManagement />} />
             <Route path="packages" element={<VendorPackages />} />
