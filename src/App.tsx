@@ -110,6 +110,7 @@ const App = () => (
             <Route path="products/upload" element={<ProductUpload />} />
             <Route path="products/manage" element={<ProductManagement />} />
             <Route path="packages" element={<VendorPackages />} />
+            <Route path="subscription" element={<VendorSubscription />} />
             <Route path="revenue" element={<VendorRevenue />} />
             <Route path="wallet" element={<VendorWallet />} />
             <Route path="wallet/:transactionId" element={<VendorTransactionDetails />} />
