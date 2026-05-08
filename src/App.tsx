@@ -36,6 +36,7 @@ import ProductUpload from "./pages/vendor/ProductUpload";
 import ProductManagement from "./pages/vendor/ProductManagement";
 import VendorPackages from "./pages/vendor/VendorPackages";
 import VendorSubscription from "./pages/vendor/VendorSubscription";
+import VendorAnalytics from "./pages/vendor/VendorAnalytics";
 import VendorStoreSetup from "./pages/vendor/VendorStoreSetup";
 import VendorStoreEdit from "./pages/vendor/VendorStoreEdit";
 import VendorRevenue from "./pages/vendor/VendorRevenue";
@@ -111,6 +112,7 @@ const App = () => (
             <Route path="products/manage" element={<ProductManagement />} />
             <Route path="packages" element={<VendorPackages />} />
             <Route path="subscription" element={<VendorSubscription />} />
+            <Route path="analytics" element={<VendorAnalytics />} />
             <Route path="revenue" element={<VendorRevenue />} />
             <Route path="wallet" element={<VendorWallet />} />
             <Route path="wallet/:transactionId" element={<VendorTransactionDetails />} />
