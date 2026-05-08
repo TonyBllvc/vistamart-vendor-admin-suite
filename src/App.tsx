@@ -36,6 +36,7 @@ import ProductUpload from "./pages/vendor/ProductUpload";
 import ProductManagement from "./pages/vendor/ProductManagement";
 import VendorPackages from "./pages/vendor/VendorPackages";
 import VendorSubscription from "./pages/vendor/VendorSubscription";
+import VendorAnalytics from "./pages/vendor/VendorAnalytics";
 import VendorStoreSetup from "./pages/vendor/VendorStoreSetup";
 import VendorStoreEdit from "./pages/vendor/VendorStoreEdit";
 import VendorRevenue from "./pages/vendor/VendorRevenue";
