@@ -59,6 +59,7 @@ import UserMessages from "./pages/user/UserMessages";
 import VendorTransactionDetails from "./pages/vendor/VendorTransactionDetails";
 import AffiliateEarnings from "./pages/affiliate/AffiliateEarnings";
 import AffiliateMessages from "./pages/affiliate/AffiliateMessages";
+import SupportChatRoom from "./pages/support/SupportChatRoom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -133,6 +134,7 @@ const App = () => (
             <Route path="transactions/:transactionId" element={<UserTransactionDetails />} />
             <Route path="wallet" element={<UserWallet />} />
             <Route path="messages" element={<UserMessages />} />
+            <Route path="support" element={<SupportChatRoom />} />
             <Route path="profile" element={<UserProfile />} />
           </Route>
           
