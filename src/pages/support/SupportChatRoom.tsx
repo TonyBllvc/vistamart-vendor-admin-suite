@@ -95,6 +95,20 @@ const SupportChatRoom = ({
   const feedRef = useRef<HTMLDivElement>(null);
   const isAtBottomRef = useRef(true);
 
+  useEffect(() => {
+    if (!entryName) return;
+    setMessages((m) => [
+      ...m,
+      {
+        id: `s-entry-${Date.now()}`,
+        type: "system",
+        body: `${entryName} has entered the chat.`,
+        timestamp: formatTime(new Date()),
+      },
+    ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entryName]);
+
   const scrollToBottom = () => {
     const el = feedRef.current;
     if (!el) return;
