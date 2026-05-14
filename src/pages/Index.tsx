@@ -11,6 +11,7 @@ import {
   Star
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import SupportChatBubble from "@/components/support/SupportChatBubble";
 
 const Index = () => {
   const features = [
