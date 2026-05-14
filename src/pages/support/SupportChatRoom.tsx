@@ -26,7 +26,13 @@ type RoomStatus = "WAITING" | "ACTIVE" | "CLOSED";
 const formatTime = (d: Date) =>
   d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
 
-const SupportChatRoom = ({ embedded = false }: { embedded?: boolean }) => {
+const SupportChatRoom = ({
+  embedded = false,
+  entryName,
+}: {
+  embedded?: boolean;
+  entryName?: string;
+}) => {
   const [status, setStatus] = useState<RoomStatus>("ACTIVE");
   const [agentOnline, setAgentOnline] = useState(true);
   const [agentName, setAgentName] = useState("Sarah");
@@ -88,6 +94,20 @@ const SupportChatRoom = ({ embedded = false }: { embedded?: boolean }) => {
 
   const feedRef = useRef<HTMLDivElement>(null);
   const isAtBottomRef = useRef(true);
+
+  useEffect(() => {
+    if (!entryName) return;
+    setMessages((m) => [
+      ...m,
+      {
+        id: `s-entry-${Date.now()}`,
+        type: "system",
+        body: `${entryName} has entered the chat.`,
+        timestamp: formatTime(new Date()),
+      },
+    ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entryName]);
 
   const scrollToBottom = () => {
     const el = feedRef.current;
