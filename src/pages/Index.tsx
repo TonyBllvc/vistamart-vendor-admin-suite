@@ -246,6 +246,8 @@ const Index = () => {
           </p>
         </div>
       </footer>
+
+      <SupportChatBubble agentsOnline />
     </div>
   );
 };
