@@ -30,6 +30,7 @@ import AdminRequests from "./pages/admin/AdminRequests";
 import SystemLogs from "./pages/admin/SystemLogs";
 import AdminReports from "./pages/admin/AdminReports";
 import AdminFAQCategories from "./pages/admin/AdminFAQCategories";
+import AdminFAQs from "./pages/admin/AdminFAQs";
 import PackageForm from "./pages/admin/PackageForm";
 import PackageList from "./pages/admin/PackageList";
 import BlogManagement from "./pages/admin/BlogManagement";
