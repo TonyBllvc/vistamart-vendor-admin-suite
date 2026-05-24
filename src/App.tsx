@@ -99,6 +99,7 @@ const App = () => (
             <Route path="messages" element={<AdminMessages />} />
             <Route path="system-logs" element={<SystemLogs />} />
             <Route path="reports" element={<AdminReports />} />
+            <Route path="faq-categories" element={<AdminFAQCategories />} />
             <Route path="packages" element={<PackageList />} />
             <Route path="packages/new" element={<PackageForm />} />
             <Route path="packages/:id/edit" element={<PackageForm />} />
