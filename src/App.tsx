@@ -29,6 +29,7 @@ import AdminOrders from "./pages/admin/AdminOrders";
 import AdminRequests from "./pages/admin/AdminRequests";
 import SystemLogs from "./pages/admin/SystemLogs";
 import AdminReports from "./pages/admin/AdminReports";
+import AdminFAQCategories from "./pages/admin/AdminFAQCategories";
 import PackageForm from "./pages/admin/PackageForm";
 import PackageList from "./pages/admin/PackageList";
 import BlogManagement from "./pages/admin/BlogManagement";
@@ -98,6 +99,7 @@ const App = () => (
             <Route path="messages" element={<AdminMessages />} />
             <Route path="system-logs" element={<SystemLogs />} />
             <Route path="reports" element={<AdminReports />} />
+            <Route path="faq-categories" element={<AdminFAQCategories />} />
             <Route path="packages" element={<PackageList />} />
             <Route path="packages/new" element={<PackageForm />} />
             <Route path="packages/:id/edit" element={<PackageForm />} />
