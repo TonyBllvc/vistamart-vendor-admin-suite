@@ -56,6 +56,8 @@ import UserWishlist from "./pages/user/UserWishlist";
 import UserTransactions from "./pages/user/UserTransactions";
 import UserTransactionDetails from "./pages/user/UserTransactionDetails";
 import UserWallet from "./pages/user/UserWallet";
+import UserWalletDeposit from "./pages/user/UserWalletDeposit";
+import UserWalletDepositVerify from "./pages/user/UserWalletDepositVerify";
 import UserPaymentMethods from "./pages/user/UserPaymentMethods";
 import UserProfile from "./pages/user/UserProfile";
 import UserMessages from "./pages/user/UserMessages";
@@ -76,6 +78,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/payment/deposit/verify" element={<UserWalletDepositVerify />} />
           
           {/* Admin Routes */}
           <Route path="/admin" element={<SidebarProvider><AdminLayout /></SidebarProvider>}>
@@ -139,6 +142,7 @@ const App = () => (
             <Route path="transactions/:transactionId" element={<UserTransactionDetails />} />
             <Route path="wallet" element={<UserWallet />} />
             <Route path="payment-methods" element={<UserPaymentMethods />} />
+            <Route path="wallet/deposit" element={<UserWalletDeposit />} />
             <Route path="messages" element={<UserMessages />} />
             <Route path="support" element={<SupportChatRoom />} />
             <Route path="profile" element={<UserProfile />} />
