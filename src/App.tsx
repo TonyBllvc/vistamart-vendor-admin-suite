@@ -56,6 +56,7 @@ import UserWishlist from "./pages/user/UserWishlist";
 import UserTransactions from "./pages/user/UserTransactions";
 import UserTransactionDetails from "./pages/user/UserTransactionDetails";
 import UserWallet from "./pages/user/UserWallet";
+import UserPaymentMethods from "./pages/user/UserPaymentMethods";
 import UserProfile from "./pages/user/UserProfile";
 import UserMessages from "./pages/user/UserMessages";
 import VendorTransactionDetails from "./pages/vendor/VendorTransactionDetails";
@@ -137,6 +138,7 @@ const App = () => (
             <Route path="transactions" element={<UserTransactions />} />
             <Route path="transactions/:transactionId" element={<UserTransactionDetails />} />
             <Route path="wallet" element={<UserWallet />} />
+            <Route path="payment-methods" element={<UserPaymentMethods />} />
             <Route path="messages" element={<UserMessages />} />
             <Route path="support" element={<SupportChatRoom />} />
             <Route path="profile" element={<UserProfile />} />
