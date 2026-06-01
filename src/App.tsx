@@ -78,6 +78,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/payment/deposit/verify" element={<UserWalletDepositVerify />} />
           
           {/* Admin Routes */}
           <Route path="/admin" element={<SidebarProvider><AdminLayout /></SidebarProvider>}>
