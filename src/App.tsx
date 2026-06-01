@@ -142,6 +142,7 @@ const App = () => (
             <Route path="transactions/:transactionId" element={<UserTransactionDetails />} />
             <Route path="wallet" element={<UserWallet />} />
             <Route path="payment-methods" element={<UserPaymentMethods />} />
+            <Route path="wallet/deposit" element={<UserWalletDeposit />} />
             <Route path="messages" element={<UserMessages />} />
             <Route path="support" element={<SupportChatRoom />} />
             <Route path="profile" element={<UserProfile />} />
