@@ -56,6 +56,7 @@ import UserWishlist from "./pages/user/UserWishlist";
 import UserTransactions from "./pages/user/UserTransactions";
 import UserTransactionDetails from "./pages/user/UserTransactionDetails";
 import UserWallet from "./pages/user/UserWallet";
+import UserPaymentMethods from "./pages/user/UserPaymentMethods";
 import UserProfile from "./pages/user/UserProfile";
 import UserMessages from "./pages/user/UserMessages";
 import VendorTransactionDetails from "./pages/vendor/VendorTransactionDetails";
