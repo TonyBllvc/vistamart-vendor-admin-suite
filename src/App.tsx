@@ -138,6 +138,7 @@ const App = () => (
             <Route path="transactions" element={<UserTransactions />} />
             <Route path="transactions/:transactionId" element={<UserTransactionDetails />} />
             <Route path="wallet" element={<UserWallet />} />
+            <Route path="payment-methods" element={<UserPaymentMethods />} />
             <Route path="messages" element={<UserMessages />} />
             <Route path="support" element={<SupportChatRoom />} />
             <Route path="profile" element={<UserProfile />} />
