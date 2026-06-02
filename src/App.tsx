@@ -58,6 +58,7 @@ import UserTransactionDetails from "./pages/user/UserTransactionDetails";
 import UserWallet from "./pages/user/UserWallet";
 import UserWalletDeposit from "./pages/user/UserWalletDeposit";
 import UserWalletDepositVerify from "./pages/user/UserWalletDepositVerify";
+import UserWalletWithdraw from "./pages/user/UserWalletWithdraw";
 import UserPaymentMethods from "./pages/user/UserPaymentMethods";
 import UserProfile from "./pages/user/UserProfile";
 import UserMessages from "./pages/user/UserMessages";
