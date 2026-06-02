@@ -144,6 +144,7 @@ const App = () => (
             <Route path="wallet" element={<UserWallet />} />
             <Route path="payment-methods" element={<UserPaymentMethods />} />
             <Route path="wallet/deposit" element={<UserWalletDeposit />} />
+            <Route path="wallet/withdraw" element={<UserWalletWithdraw />} />
             <Route path="messages" element={<UserMessages />} />
             <Route path="support" element={<SupportChatRoom />} />
             <Route path="profile" element={<UserProfile />} />
