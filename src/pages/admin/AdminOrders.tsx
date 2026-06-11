@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { EscrowActions, EscrowFrozenBanner } from "@/components/admin/EscrowActions";
 
 const orderStats = [
   {
@@ -196,6 +197,8 @@ const AdminOrders = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [frozenOrders, setFrozenOrders] = useState<Record<string, string>>({});
+
 
   const filteredOrders = orders.filter(order => {
     const matchesSearch = order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -576,6 +579,20 @@ const AdminOrders = () => {
                             Cancel
                           </Button>
                         </div>
+                      </div>
+
+                      <Separator />
+
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Escrow Actions</label>
+                        {frozenOrders[selectedOrder.id] && (
+                          <div className="mb-3"><EscrowFrozenBanner reason={frozenOrders[selectedOrder.id]} /></div>
+                        )}
+                        <EscrowActions
+                          orderId={selectedOrder.id}
+                          lineItemCount={selectedOrder.items?.length || selectedOrder.items || 1}
+                          onFrozen={(reason) => setFrozenOrders((p) => ({ ...p, [selectedOrder.id]: reason }))}
+                        />
                       </div>
 
                       <Separator />
